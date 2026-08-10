@@ -1,13 +1,23 @@
 "use client";
 
+import { useState } from 'react';
 import Link from 'next/link';
 import { useAppContext } from '@/context/AppContext';
 
 export default function Navbar() {
   const { user, logout, cart } = useAppContext();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // Calculate total items in cart
   const cartItemCount = cart.reduce((total, item) => total + item.quantity, 0);
+
+  const toggleMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  const closeMenu = () => {
+    setIsMobileMenuOpen(false);
+  };
 
   return (
     <nav className="navbar">
@@ -30,17 +40,38 @@ export default function Navbar() {
           gap: 1.5rem;
           align-items: center;
         }
+        .hamburger {
+          display: none;
+          background: none;
+          border: none;
+          color: white;
+          font-size: 1.8rem;
+          cursor: pointer;
+          padding: 0.2rem;
+          line-height: 1;
+        }
         @media (max-width: 768px) {
           .navbar {
             padding: 0.75rem 1rem;
-            flex-direction: column;
-            gap: 0.75rem;
+          }
+          .hamburger {
+            display: block;
           }
           .nav-actions {
-            gap: 1rem;
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
             width: 100%;
-            justify-content: center;
-            flex-wrap: wrap;
+            background-color: rgba(15, 23, 42, 0.98);
+            flex-direction: column;
+            gap: 1.5rem;
+            padding: 2rem 1.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            align-items: center;
+          }
+          .nav-actions.open {
+            display: flex;
           }
         }
         .brand-logo {
@@ -67,55 +98,63 @@ export default function Navbar() {
           transform: rotate(-20deg) scale(1.2) translateY(-4px);
         }
       `}</style>
-      <Link href="/" style={{ textDecoration: 'none' }}>
+      
+      <Link href="/" style={{ textDecoration: 'none' }} onClick={closeMenu}>
         <h2 className="brand-logo">
           <span className="chef-hat">👨‍🍳</span>
-          Maraki Food Zones
+          Maraki Food
         </h2>
       </Link>
-      <div className="nav-actions">
+      
+      <button className="hamburger" onClick={toggleMenu}>
+        {isMobileMenuOpen ? '✕' : '☰'}
+      </button>
+
+      <div className={`nav-actions ${isMobileMenuOpen ? 'open' : ''}`}>
         {(!user || user.role === 'customer') && (
-          <Link href="/restaurants" style={{ color: '#f8fafc', textDecoration: 'none', fontWeight: 600 }}>Restaurants</Link>
+          <Link href="/restaurants" style={{ color: '#f8fafc', textDecoration: 'none', fontWeight: 600 }} onClick={closeMenu}>Restaurants</Link>
         )}
         
         {user ? (
           <>
             {user.role === 'customer' && (
-              <Link href="/orders" style={{ color: '#f8fafc', textDecoration: 'none', fontWeight: 600 }}>My Orders</Link>
+              <Link href="/orders" style={{ color: '#f8fafc', textDecoration: 'none', fontWeight: 600 }} onClick={closeMenu}>My Orders</Link>
             )}
             {user.role === 'restaurant' && (
-              <Link href="/dashboard/restaurant" style={{ color: 'var(--primary)', textDecoration: 'none', fontWeight: 600 }}>Restaurant Dashboard</Link>
+              <Link href="/dashboard/restaurant" style={{ color: 'var(--primary)', textDecoration: 'none', fontWeight: 600 }} onClick={closeMenu}>Restaurant Dashboard</Link>
             )}
             {user.role === 'driver' && (
-              <Link href="/dashboard/driver" style={{ color: 'var(--primary)', textDecoration: 'none', fontWeight: 600 }}>Driver Portal</Link>
+              <Link href="/dashboard/driver" style={{ color: 'var(--primary)', textDecoration: 'none', fontWeight: 600 }} onClick={closeMenu}>Driver Portal</Link>
             )}
             <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
               <span style={{ marginRight: '1rem', color: '#cbd5e1', fontSize: '0.95rem', fontWeight: 500 }}>Hi, {user.name.split(' ')[0]}</span>
-              <button onClick={logout} style={{ padding: '0.4rem 1rem', fontSize: '0.9rem', backgroundColor: 'transparent', border: '1px solid #cbd5e1', color: '#f8fafc', borderRadius: '2rem', cursor: 'pointer', fontWeight: 600 }}>Log Out</button>
+              <button onClick={() => { logout(); closeMenu(); }} style={{ padding: '0.4rem 1rem', fontSize: '0.9rem', backgroundColor: 'transparent', border: '1px solid #cbd5e1', color: '#f8fafc', borderRadius: '2rem', cursor: 'pointer', fontWeight: 600 }}>Log Out</button>
             </div>
           </>
         ) : (
           <>
-            <Link href="/login" style={{ color: '#f8fafc', textDecoration: 'none', fontWeight: 600 }}>Log in</Link>
-            <Link href="/register" className="btn-primary" style={{ padding: '0.4rem 1rem', fontSize: '0.9rem' }}>Sign up</Link>
+            <Link href="/login" style={{ color: '#f8fafc', textDecoration: 'none', fontWeight: 600 }} onClick={closeMenu}>Log in</Link>
+            <Link href="/register" className="btn-primary" style={{ padding: '0.4rem 1rem', fontSize: '0.9rem' }} onClick={closeMenu}>Sign up</Link>
           </>
         )}
         
         {/* Cart Indicator */}
         {(!user || user.role === 'customer') && cartItemCount > 0 && (
-          <div style={{ 
-            backgroundColor: 'var(--primary)', 
-            color: 'white', 
-            borderRadius: '2rem', 
-            padding: '0.25rem 0.75rem', 
-            fontSize: '0.8rem', 
-            fontWeight: 'bold',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.5rem'
-          }}>
-            🛒 {cartItemCount}
-          </div>
+          <Link href="/checkout" style={{ textDecoration: 'none' }} onClick={closeMenu}>
+            <div style={{ 
+              backgroundColor: 'var(--primary)', 
+              color: 'white', 
+              borderRadius: '2rem', 
+              padding: '0.25rem 0.75rem', 
+              fontSize: '0.8rem', 
+              fontWeight: 'bold',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem'
+            }}>
+              🛒 {cartItemCount}
+            </div>
+          </Link>
         )}
       </div>
     </nav>
