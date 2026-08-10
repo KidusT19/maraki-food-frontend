@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { GoogleLogin } from '@react-oauth/google';
 import { useAppContext } from '@/context/AppContext';
 
 export default function RegisterPage() {
@@ -13,7 +14,29 @@ export default function RegisterPage() {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
-  const { t } = useAppContext();
+  const { login, t } = useAppContext();
+
+  const handleGoogleSuccess = async (credentialResponse: any) => {
+    setLoading(true);
+    setError('');
+    try {
+      const res = await fetch('https://maraki-food-backend.onrender.com/api/auth/google', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token: credentialResponse.credential })
+      });
+      const data = await res.json();
+      
+      if (res.ok) {
+        login(data.token, data.user);
+      } else {
+        setError(data.error || 'Google registration failed');
+      }
+    } catch (err) {
+      setError('Network error. Is the server running?');
+    }
+    setLoading(false);
+  };
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -109,6 +132,22 @@ export default function RegisterPage() {
             {loading ? '...' : t('register_title')}
           </button>
         </form>
+
+        <div style={{ display: 'flex', alignItems: 'center', margin: '0.5rem 0' }}>
+          <hr style={{ flex: 1, borderColor: '#e2e8f0', margin: 0 }} />
+          <span style={{ padding: '0 1rem', color: '#94a3b8', fontSize: '0.85rem' }}>or</span>
+          <hr style={{ flex: 1, borderColor: '#e2e8f0', margin: 0 }} />
+        </div>
+
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
+          <GoogleLogin
+            onSuccess={handleGoogleSuccess}
+            onError={() => {
+              setError('Google Sign Up Failed');
+            }}
+            text="signup_with"
+          />
+        </div>
 
         <p style={{ textAlign: 'center', fontSize: '0.9rem', opacity: 0.8 }}>
           <Link href="/login" style={{ color: 'var(--primary)', fontWeight: 600, textDecoration: 'none' }}>{t('already_have_account')}</Link>

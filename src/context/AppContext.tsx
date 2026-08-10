@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 import { translations, TranslationKey } from '@/utils/translations';
 
 interface User {
@@ -143,13 +144,15 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const cartTotal = cart.reduce((total, item) => total + (parseFloat(item.price) * item.quantity), 0);
 
   return (
-    <AppContext.Provider value={{
-      user, token, login, logout, setUser,
-      cart, addToCart, removeFromCart, updateQuantity, clearCart, cartTotal,
-      language, setLanguage, t
-    }}>
-      {children}
-    </AppContext.Provider>
+    <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "263003067668-905gsnee1qhb06qfse1efc7f5l9ojid6.apps.googleusercontent.com"}>
+      <AppContext.Provider value={{
+        user, token, login, logout, setUser,
+        cart, addToCart, removeFromCart, updateQuantity, clearCart, cartTotal,
+        language, setLanguage, t
+      }}>
+        {children}
+      </AppContext.Provider>
+    </GoogleOAuthProvider>
   );
 }
 

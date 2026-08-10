@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { GoogleLogin } from '@react-oauth/google';
 import { useAppContext } from '@/context/AppContext';
 
 export default function LoginPage() {
@@ -11,6 +12,28 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const { login, t } = useAppContext();
+
+  const handleGoogleSuccess = async (credentialResponse: any) => {
+    setLoading(true);
+    setError('');
+    try {
+      const res = await fetch('https://maraki-food-backend.onrender.com/api/auth/google', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token: credentialResponse.credential })
+      });
+      const data = await res.json();
+      
+      if (res.ok) {
+        login(data.token, data.user);
+      } else {
+        setError(data.error || 'Google login failed');
+      }
+    } catch (err) {
+      setError('Network error. Is the server running?');
+    }
+    setLoading(false);
+  };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -99,6 +122,21 @@ export default function LoginPage() {
             {loading ? '...' : t('nav_login')}
           </button>
         </form>
+
+        <div style={{ display: 'flex', alignItems: 'center', margin: '0.5rem 0' }}>
+          <hr style={{ flex: 1, borderColor: '#e2e8f0', margin: 0 }} />
+          <span style={{ padding: '0 1rem', color: '#94a3b8', fontSize: '0.85rem' }}>or</span>
+          <hr style={{ flex: 1, borderColor: '#e2e8f0', margin: 0 }} />
+        </div>
+
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
+          <GoogleLogin
+            onSuccess={handleGoogleSuccess}
+            onError={() => {
+              setError('Google Login Failed');
+            }}
+          />
+        </div>
 
         <p style={{ textAlign: 'center', fontSize: '0.9rem', opacity: 0.8 }}>
           <Link href="/register" style={{ color: 'var(--primary)', fontWeight: 600, textDecoration: 'none' }}>{t('dont_have_account')}</Link>
