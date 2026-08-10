@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useAppContext } from '@/context/AppContext';
 
 export default function Navbar() {
-  const { user, logout, cart } = useAppContext();
+  const { user, logout, cart, language, setLanguage, t } = useAppContext();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // Calculate total items in cart
@@ -122,9 +122,24 @@ export default function Navbar() {
       <div className="nav-right-cluster">
         {user && (
           <span style={{ color: '#cbd5e1', fontSize: '1rem', fontWeight: 600 }}>
-            Hi, {user.name.split(' ')[0]}
+            {user.name.split(' ')[0]}
           </span>
         )}
+        <button 
+          onClick={() => setLanguage(language === 'en' ? 'am' : 'en')}
+          style={{
+            background: 'rgba(255,255,255,0.1)',
+            border: '1px solid rgba(255,255,255,0.2)',
+            color: 'white',
+            padding: '0.3rem 0.6rem',
+            borderRadius: '0.5rem',
+            cursor: 'pointer',
+            fontWeight: 'bold',
+            fontSize: '0.9rem'
+          }}
+        >
+          {language === 'en' ? 'አማ' : 'EN'}
+        </button>
         <button className="hamburger" onClick={toggleMenu}>
           {isMobileMenuOpen ? '✕' : '☰'}
         </button>
@@ -132,27 +147,27 @@ export default function Navbar() {
 
       <div className={`nav-actions ${isMobileMenuOpen ? 'open' : ''}`}>
         {(!user || user.role === 'customer') && (
-          <Link href="/restaurants" style={{ color: '#f8fafc', textDecoration: 'none', fontWeight: 600, fontSize: '1.1rem' }} onClick={closeMenu}>Restaurants</Link>
+          <Link href="/restaurants" style={{ color: '#f8fafc', textDecoration: 'none', fontWeight: 600, fontSize: '1.1rem' }} onClick={closeMenu}>{t('nav_restaurants')}</Link>
         )}
         
         {user ? (
           <>
             {user.role === 'customer' && (
-              <Link href="/orders" style={{ color: '#f8fafc', textDecoration: 'none', fontWeight: 600, fontSize: '1.1rem' }} onClick={closeMenu}>My Orders</Link>
+              <Link href="/orders" style={{ color: '#f8fafc', textDecoration: 'none', fontWeight: 600, fontSize: '1.1rem' }} onClick={closeMenu}>{t('my_orders')}</Link>
             )}
             {user.role === 'restaurant' && (
-              <Link href="/dashboard/restaurant" style={{ color: 'var(--primary)', textDecoration: 'none', fontWeight: 600, fontSize: '1.1rem' }} onClick={closeMenu}>Restaurant Dashboard</Link>
+              <Link href="/dashboard/restaurant" style={{ color: 'var(--primary)', textDecoration: 'none', fontWeight: 600, fontSize: '1.1rem' }} onClick={closeMenu}>{t('nav_dashboard')}</Link>
             )}
             {user.role === 'driver' && (
-              <Link href="/dashboard/driver" style={{ color: 'var(--primary)', textDecoration: 'none', fontWeight: 600, fontSize: '1.1rem' }} onClick={closeMenu}>Driver Portal</Link>
+              <Link href="/dashboard/driver" style={{ color: 'var(--primary)', textDecoration: 'none', fontWeight: 600, fontSize: '1.1rem' }} onClick={closeMenu}>{t('nav_dashboard')}</Link>
             )}
             
-            <button onClick={() => { logout(); closeMenu(); }} style={{ marginTop: '0.5rem', padding: '0.5rem 1.5rem', fontSize: '1rem', backgroundColor: 'transparent', border: '1px solid #cbd5e1', color: '#f8fafc', borderRadius: '2rem', cursor: 'pointer', fontWeight: 600, width: '100%' }}>Log Out</button>
+            <button onClick={() => { logout(); closeMenu(); }} style={{ marginTop: '0.5rem', padding: '0.5rem 1.5rem', fontSize: '1rem', backgroundColor: 'transparent', border: '1px solid #cbd5e1', color: '#f8fafc', borderRadius: '2rem', cursor: 'pointer', fontWeight: 600, width: '100%' }}>{t('nav_logout')}</button>
           </>
         ) : (
           <>
-            <Link href="/login" style={{ color: '#f8fafc', textDecoration: 'none', fontWeight: 600, fontSize: '1.1rem' }} onClick={closeMenu}>Log in</Link>
-            <Link href="/register" className="btn-primary" style={{ padding: '0.5rem 1.5rem', fontSize: '1rem', width: '100%', textAlign: 'center' }} onClick={closeMenu}>Sign up</Link>
+            <Link href="/login" style={{ color: '#f8fafc', textDecoration: 'none', fontWeight: 600, fontSize: '1.1rem' }} onClick={closeMenu}>{t('nav_login')}</Link>
+            <Link href="/register" className="btn-primary" style={{ padding: '0.5rem 1.5rem', fontSize: '1rem', width: '100%', textAlign: 'center' }} onClick={closeMenu}>{t('register_title')}</Link>
           </>
         )}
         
@@ -172,7 +187,7 @@ export default function Navbar() {
               gap: '0.5rem',
               marginTop: '0.5rem'
             }}>
-              🛒 Checkout ({cartItemCount})
+              {t('checkout')} ({cartItemCount})
             </div>
           </Link>
         )}

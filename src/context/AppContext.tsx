@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { translations, TranslationKey } from '@/utils/translations';
 
 interface User {
   id: number;
@@ -31,6 +32,9 @@ interface AppContextType {
   updateQuantity: (itemId: number, delta: number) => void;
   clearCart: () => void;
   cartTotal: number;
+  language: 'en' | 'am';
+  setLanguage: (lang: 'en' | 'am') => void;
+  t: (key: TranslationKey) => string;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -39,13 +43,28 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [cart, setCart] = useState<CartItem[]>([]);
+  const [language, setLanguageState] = useState<'en' | 'am'>('en');
   const router = useRouter();
+
+  const setLanguage = (lang: 'en' | 'am') => {
+    setLanguageState(lang);
+    localStorage.setItem('language', lang);
+  };
+
+  const t = (key: TranslationKey): string => {
+    return translations[language][key] || translations['en'][key] || key;
+  };
 
   // Load from localStorage on mount
   useEffect(() => {
     const savedToken = localStorage.getItem('token');
     const savedUser = localStorage.getItem('user');
     const savedCart = localStorage.getItem('cart');
+    const savedLang = localStorage.getItem('language');
+    
+    if (savedLang === 'en' || savedLang === 'am') {
+      setLanguageState(savedLang);
+    }
     
     if (savedToken && savedUser) {
       setToken(savedToken);
@@ -126,7 +145,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   return (
     <AppContext.Provider value={{
       user, token, login, logout, setUser,
-      cart, addToCart, removeFromCart, updateQuantity, clearCart, cartTotal
+      cart, addToCart, removeFromCart, updateQuantity, clearCart, cartTotal,
+      language, setLanguage, t
     }}>
       {children}
     </AppContext.Provider>

@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAppContext } from '@/context/AppContext';
 
 export default function RestaurantDashboard() {
-  const { user } = useAppContext();
+  const { user, t } = useAppContext();
   const router = useRouter();
   const [orders, setOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -72,14 +72,14 @@ export default function RestaurantDashboard() {
   return (
     <>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-        <h1 className="section-title" style={{ color: '#f8fafc', margin: 0 }}>Live Order Feed 🟢</h1>
+        <h1 className="section-title" style={{ color: '#f8fafc', margin: 0 }}>{t('live_order_feed')} 🟢</h1>
       </div>
 
         {loading ? (
-          <p style={{ textAlign: 'center' }}>Loading incoming orders...</p>
+          <p style={{ textAlign: 'center' }}>{t('loading_orders')}</p>
         ) : orders.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '3rem', background: 'rgba(255, 255, 255, 0.03)', borderRadius: '1rem', border: '1px solid rgba(255, 255, 255, 0.1)' }}>
-            <p>No orders yet.</p>
+            <p>{t('no_orders')}</p>
           </div>
         ) : (
           <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))', gap: '1.5rem' }}>
@@ -96,7 +96,7 @@ export default function RestaurantDashboard() {
               }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '1rem' }}>
                   <div>
-                    <h3 style={{ fontSize: '1.2rem', margin: '0 0 0.25rem 0' }}>Order #{order.id}</h3>
+                    <h3 style={{ fontSize: '1.2rem', margin: '0 0 0.25rem 0' }}>{t('order')} #{order.id}</h3>
                     <p style={{ fontSize: '0.9rem', color: '#cbd5e1', margin: 0 }}>
                       👤 <strong>{order.customer_name}</strong>
                     </p>
@@ -106,7 +106,7 @@ export default function RestaurantDashboard() {
                 
                 {/* Items Ordered */}
                 <div style={{ background: 'rgba(255,255,255,0.02)', padding: '0.75rem', borderRadius: '0.5rem' }}>
-                  <p style={{ margin: '0 0 0.5rem 0', fontSize: '0.85rem', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Items to Prepare:</p>
+                  <p style={{ margin: '0 0 0.5rem 0', fontSize: '0.85rem', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{t('items_to_prepare')}:</p>
                   <ul style={{ margin: 0, paddingLeft: '1.2rem', color: '#e2e8f0', fontSize: '0.95rem' }}>
                     {order.items?.map((item: any, i: number) => (
                       <li key={i} style={{ marginBottom: '0.25rem' }}>
@@ -135,13 +135,13 @@ export default function RestaurantDashboard() {
                   
                   {(order.transaction_id || order.receipt_screenshot) && (
                     <div style={{ padding: '0.75rem', background: 'rgba(0,0,0,0.2)', borderRadius: '0.5rem', marginTop: '0.5rem' }}>
-                      <p style={{ margin: '0 0 0.25rem 0', fontSize: '0.85rem', color: '#cbd5e1' }}><strong>Verification:</strong></p>
+                      <p style={{ margin: '0 0 0.25rem 0', fontSize: '0.85rem', color: '#cbd5e1' }}><strong>{t('verification')}:</strong></p>
                       {order.transaction_id && (
                         <p style={{ margin: '0 0 0.25rem 0', fontSize: '0.85rem', color: '#94a3b8' }}>ID: <span style={{ color: '#fff' }}>{order.transaction_id}</span></p>
                       )}
                       {order.receipt_screenshot && (
                         <a href={`https://maraki-food-backend.onrender.com/uploads/${order.receipt_screenshot}`} target="_blank" rel="noreferrer" style={{ fontSize: '0.85rem', color: 'var(--primary)', textDecoration: 'underline' }}>
-                          📄 View Screenshot
+                          📄 {t('view_screenshot')}
                         </a>
                       )}
                     </div>
@@ -152,21 +152,21 @@ export default function RestaurantDashboard() {
                   {order.status === 'pending' && (
                     <>
                       <button onClick={() => updateOrderStatus(order.id, 'rejected')} style={{ width: '40%', padding: '0.75rem', fontSize: '0.9rem', background: 'transparent', border: '1px solid #ef4444', color: '#ef4444', borderRadius: '0.5rem', cursor: 'pointer' }}>
-                        Reject
+                        {t('reject')}
                       </button>
                       <button onClick={() => updateOrderStatus(order.id, 'preparing')} className="btn-primary" style={{ width: '60%', padding: '0.75rem', fontSize: '0.9rem' }}>
-                        Accept & Prepare
+                        {t('accept_prepare')}
                       </button>
                     </>
                   )}
                   {order.status === 'preparing' && (
                     <button onClick={() => updateOrderStatus(order.id, 'ready')} className="btn-primary" style={{ width: '100%', padding: '0.75rem', fontSize: '0.9rem', background: '#3b82f6', borderColor: '#3b82f6' }}>
-                      Mark as Ready
+                      {t('mark_ready')}
                     </button>
                   )}
                   {(order.status === 'ready' || order.status === 'on_the_way' || order.status === 'delivered') && (
                     <button disabled style={{ width: '100%', padding: '0.75rem', fontSize: '0.9rem', background: 'rgba(255,255,255,0.1)', color: '#94a3b8', border: 'none', borderRadius: '0.5rem' }}>
-                      Waiting for Driver
+                      {t('waiting_driver')}
                     </button>
                   )}
                 </div>

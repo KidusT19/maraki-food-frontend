@@ -2,7 +2,10 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 
+import { useAppContext } from '@/context/AppContext';
+
 export default function OrdersPage() {
+  const { t } = useAppContext();
   const [orders, setOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   
@@ -63,15 +66,15 @@ export default function OrdersPage() {
       }}
     >
       <div className="container">
-        <h1 className="section-title" style={{ color: '#f8fafc', textShadow: '0 2px 10px rgba(0,0,0,0.5)' }}>Your Orders</h1>
+        <h1 className="section-title" style={{ color: '#f8fafc', textShadow: '0 2px 10px rgba(0,0,0,0.5)' }}>{t('your_orders')}</h1>
         
         {loading ? (
-          <p style={{ textAlign: 'center', color: '#cbd5e1' }}>Loading orders...</p>
+          <p style={{ textAlign: 'center', color: '#cbd5e1' }}>{t('loading_orders')}</p>
         ) : orders.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '3rem', background: 'rgba(255, 255, 255, 0.03)', borderRadius: '1rem', border: '1px solid rgba(255, 255, 255, 0.1)', backdropFilter: 'blur(10px)' }}>
-            <p style={{ marginBottom: '1.5rem', opacity: 0.8, color: '#f8fafc' }}>You haven't placed any orders yet.</p>
+            <p style={{ marginBottom: '1.5rem', opacity: 0.8, color: '#f8fafc' }}>{t('no_orders')}</p>
             <Link href="/restaurants">
-              <button className="btn-primary">Find Food</button>
+              <button className="btn-primary">{t('find_food')}</button>
             </Link>
           </div>
         ) : (
@@ -127,7 +130,7 @@ export default function OrdersPage() {
                   </span>
                   {order.receipt_screenshot && (
                     <a href={`https://maraki-food-backend.onrender.com/uploads/${order.receipt_screenshot}`} target="_blank" rel="noreferrer" style={{ display: 'inline-block', padding: '0.4rem 1rem', fontSize: '0.85rem', background: 'transparent', color: '#cbd5e1', border: '1px solid #cbd5e1', borderRadius: '2rem', cursor: 'pointer', fontWeight: 600, textDecoration: 'none', marginTop: '0.5rem' }}>
-                      View Receipt
+                      {t('view_receipt')}
                     </a>
                   )}
                   {order.status === 'delivered' && !order.is_rated && (
@@ -135,7 +138,7 @@ export default function OrdersPage() {
                       onClick={() => setRatingOrder(order)}
                       style={{ display: 'block', width: '100%', marginTop: '1rem', padding: '0.5rem 1rem', fontSize: '0.9rem', background: '#eab308', color: '#000', border: 'none', borderRadius: '2rem', cursor: 'pointer', fontWeight: 700 }}
                     >
-                      Rate Order ⭐️
+                      {t('rate_order')} ⭐️
                     </button>
                   )}
                 </div>
@@ -148,8 +151,8 @@ export default function OrdersPage() {
       {ratingOrder && (
         <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.8)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100 }}>
           <div style={{ background: '#1e293b', padding: '2rem', borderRadius: '1rem', width: '90%', maxWidth: '400px' }}>
-            <h3 style={{ margin: '0 0 1rem 0', color: '#fff' }}>Rate your experience</h3>
-            <p style={{ color: '#cbd5e1', marginBottom: '1.5rem', fontSize: '0.9rem' }}>How was the food from {ratingOrder.restaurant_name}?</p>
+            <h3 style={{ margin: '0 0 1rem 0', color: '#fff' }}>{t('rate_experience')}</h3>
+            <p style={{ color: '#cbd5e1', marginBottom: '1.5rem', fontSize: '0.9rem' }}>{t('how_was_food').replace('{restaurant}', ratingOrder.restaurant_name)}</p>
             
             <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem', justifyContent: 'center' }}>
               {[1, 2, 3, 4, 5].map(star => (
@@ -172,13 +175,13 @@ export default function OrdersPage() {
             <textarea 
               value={comment}
               onChange={e => setComment(e.target.value)}
-              placeholder="Leave a comment (optional)..."
+              placeholder={t('leave_comment')}
               style={{ width: '100%', padding: '0.75rem', borderRadius: '0.5rem', border: '1px solid #334155', background: '#0f172a', color: '#fff', marginBottom: '1rem', minHeight: '80px', fontFamily: 'inherit' }}
             />
 
             <div style={{ display: 'flex', gap: '1rem' }}>
-              <button onClick={() => setRatingOrder(null)} style={{ flex: 1, padding: '0.75rem', background: 'transparent', border: '1px solid #475569', color: '#cbd5e1', borderRadius: '0.5rem', cursor: 'pointer' }}>Cancel</button>
-              <button onClick={submitReview} style={{ flex: 1, padding: '0.75rem', background: 'var(--primary)', border: 'none', color: '#fff', borderRadius: '0.5rem', cursor: 'pointer', fontWeight: 'bold' }}>Submit Review</button>
+              <button onClick={() => setRatingOrder(null)} style={{ flex: 1, padding: '0.75rem', background: 'transparent', border: '1px solid #475569', color: '#cbd5e1', borderRadius: '0.5rem', cursor: 'pointer' }}>{t('cancel')}</button>
+              <button onClick={submitReview} style={{ flex: 1, padding: '0.75rem', background: 'var(--primary)', border: 'none', color: '#fff', borderRadius: '0.5rem', cursor: 'pointer', fontWeight: 'bold' }}>{t('submit_review')}</button>
             </div>
           </div>
         </div>

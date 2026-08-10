@@ -10,7 +10,7 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const { login } = useAppContext();
+  const { login, t } = useAppContext();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,15 +40,14 @@ export default function LoginPage() {
     <main className="section bg-surface" style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
       <div className="card" style={{ maxWidth: '400px', width: '100%', padding: '2rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
         <div style={{ textAlign: 'center' }}>
-          <h1 className="section-title" style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>Welcome Back</h1>
-          <p style={{ opacity: 0.7 }}>Log in to order your favorite food.</p>
+          <h1 className="section-title" style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>{t('login_title')}</h1>
         </div>
 
         {error && <div style={{ backgroundColor: '#ef444422', color: '#ef4444', padding: '1rem', borderRadius: '0.5rem', fontSize: '0.9rem', textAlign: 'center' }}>{error}</div>}
 
         <form onSubmit={handleLogin} autoComplete="off" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           <div>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', fontWeight: 600 }}>Email Address</label>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', fontWeight: 600 }}>{t('email')}</label>
             <input 
               type="email" 
               value={email}
@@ -59,7 +58,7 @@ export default function LoginPage() {
             />
           </div>
           <div style={{ position: 'relative' }}>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', fontWeight: 600 }}>Password</label>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', fontWeight: 600 }}>{t('password')}</label>
             <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
               <input 
                 type={showPassword ? "text" : "password"} 
@@ -97,12 +96,12 @@ export default function LoginPage() {
             </div>
           </div>
           <button type="submit" className="btn-primary" disabled={loading} style={{ width: '100%', marginTop: '1rem', justifyContent: 'center' }}>
-            {loading ? 'Logging in...' : 'Log In'}
+            {loading ? '...' : t('nav_login')}
           </button>
         </form>
 
         <p style={{ textAlign: 'center', fontSize: '0.9rem', opacity: 0.8 }}>
-          Don't have an account? <Link href="/register" style={{ color: 'var(--primary)', fontWeight: 600, textDecoration: 'none' }}>Sign up</Link>
+          <Link href="/register" style={{ color: 'var(--primary)', fontWeight: 600, textDecoration: 'none' }}>{t('dont_have_account')}</Link>
         </p>
       </div>
     </main>

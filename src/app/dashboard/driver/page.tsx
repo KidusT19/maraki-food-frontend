@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAppContext } from '@/context/AppContext';
 
 export default function DriverDashboard() {
-  const { user } = useAppContext();
+  const { user, t } = useAppContext();
   const router = useRouter();
   const [orders, setOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -96,8 +96,8 @@ export default function DriverDashboard() {
     <main className="section" style={{ paddingTop: '8rem', minHeight: '100vh', background: 'radial-gradient(circle at top left, #064e3b, #0f172a 50%, #020617 100%)', color: '#f8fafc' }}>
       <div className="container">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-          <h1 className="section-title" style={{ color: '#f8fafc', margin: 0 }}>Driver Portal</h1>
-          <span style={{ padding: '0.5rem 1rem', background: 'rgba(255,255,255,0.1)', borderRadius: '2rem', fontSize: '0.9rem' }}>Searching for Deliveries 🛵</span>
+          <h1 className="section-title" style={{ color: '#f8fafc', margin: 0 }}>{t('driver_portal')}</h1>
+          <span style={{ padding: '0.5rem 1rem', background: 'rgba(255,255,255,0.1)', borderRadius: '2rem', fontSize: '0.9rem' }}>{t('searching_deliveries')} 🛵</span>
         </div>
 
         <div style={{ display: 'flex', gap: '1rem', marginBottom: '2rem' }}>
@@ -112,7 +112,7 @@ export default function DriverDashboard() {
               cursor: 'pointer',
               fontWeight: 600
             }}>
-            Available Orders ({availableOrders.length})
+            {t('available_orders')} ({availableOrders.length})
           </button>
           <button 
             onClick={() => setActiveTab('mine')}
@@ -125,15 +125,15 @@ export default function DriverDashboard() {
               cursor: 'pointer',
               fontWeight: 600
             }}>
-            My Deliveries ({myOrders.length})
+            {t('my_deliveries')} ({myOrders.length})
           </button>
         </div>
 
         {loading ? (
-          <p style={{ textAlign: 'center' }}>Loading available deliveries...</p>
+          <p style={{ textAlign: 'center' }}>{t('loading_deliveries')}</p>
         ) : displayOrders.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '3rem', background: 'rgba(255, 255, 255, 0.03)', borderRadius: '1rem', border: '1px solid rgba(255, 255, 255, 0.1)' }}>
-            <p>{activeTab === 'available' ? "No available orders right now." : "You haven't claimed any orders yet."}</p>
+            <p>{activeTab === 'available' ? t('no_available_orders') : t('no_claimed_orders')}</p>
           </div>
         ) : (
           <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))', gap: '1.5rem' }}>
@@ -150,9 +150,9 @@ export default function DriverDashboard() {
               }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '1rem' }}>
                   <div>
-                    <h3 style={{ fontSize: '1.2rem', margin: '0 0 0.25rem 0' }}>Order #{order.id}</h3>
-                    <p style={{ fontSize: '0.9rem', color: '#cbd5e1', margin: '0 0 0.25rem 0' }}>Pickup: {order.restaurant_name}</p>
-                    <p style={{ fontSize: '0.9rem', color: '#cbd5e1', margin: 0 }}>Deliver to: {order.customer_name}</p>
+                    <h3 style={{ fontSize: '1.2rem', margin: '0 0 0.25rem 0' }}>{t('order')} #{order.id}</h3>
+                    <p style={{ fontSize: '0.9rem', color: '#cbd5e1', margin: '0 0 0.25rem 0' }}>{t('pickup')}: {order.restaurant_name}</p>
+                    <p style={{ fontSize: '0.9rem', color: '#cbd5e1', margin: 0 }}>{t('deliver_to')}: {order.customer_name}</p>
                   </div>
                   <span style={{ fontWeight: 'bold', color: 'var(--primary)', fontSize: '1.2rem' }}>{Number(order.total_amount).toFixed(2)} ETB</span>
                 </div>
@@ -182,30 +182,30 @@ export default function DriverDashboard() {
                     backgroundColor: order.status === 'pending' ? 'rgba(100, 116, 139, 0.2)' : order.status === 'preparing' ? 'rgba(234, 179, 8, 0.2)' : order.status === 'ready' ? 'rgba(59, 130, 246, 0.2)' : 'rgba(168, 85, 247, 0.2)',
                     color: order.status === 'pending' ? '#94a3b8' : order.status === 'preparing' ? '#eab308' : order.status === 'ready' ? '#60a5fa' : '#c084fc'
                   }}>
-                    {order.status === 'pending' ? 'Pending Restaurant Approval...' : order.status === 'preparing' ? 'Restaurant is preparing...' : order.status === 'ready' ? 'Ready for Pickup' : 'On The Way'}
+                    {order.status === 'pending' ? t('pending_restaurant_approval') : order.status === 'preparing' ? t('restaurant_preparing') : order.status === 'ready' ? t('ready_pickup') : t('on_the_way_status')}
                   </span>
                 </div>
 
                 <div style={{ marginTop: 'auto', paddingTop: '1rem', display: 'flex', gap: '0.5rem' }}>
                   {activeTab === 'available' ? (
                     <button onClick={() => handleClaimOrder(order.id)} className="btn-primary" style={{ width: '100%', padding: '0.75rem', fontSize: '0.9rem' }}>
-                      Claim Order
+                      {t('claim_order')}
                     </button>
                   ) : (
                     <>
                       {(order.status === 'pending' || order.status === 'preparing') && (
                         <button disabled className="btn-primary" style={{ width: '100%', padding: '0.75rem', fontSize: '0.9rem', opacity: 0.5, cursor: 'not-allowed' }}>
-                          Waiting for Restaurant...
+                          {t('waiting_restaurant')}
                         </button>
                       )}
                       {order.status === 'ready' && (
                         <button onClick={() => updateOrderStatus(order.id, 'on_the_way')} className="btn-primary" style={{ width: '100%', padding: '0.75rem', fontSize: '0.9rem', background: '#a855f7', borderColor: '#a855f7' }}>
-                          Pick Up Order
+                          {t('pick_up_order')}
                         </button>
                       )}
                       {order.status === 'on_the_way' && (
                         <button onClick={() => updateOrderStatus(order.id, 'delivered')} className="btn-primary" style={{ width: '100%', padding: '0.75rem', fontSize: '0.9rem', background: '#10b981', borderColor: '#10b981' }}>
-                          Mark as Delivered
+                          {t('mark_delivered')}
                         </button>
                       )}
                     </>

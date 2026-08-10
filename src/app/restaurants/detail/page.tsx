@@ -12,7 +12,7 @@ function RestaurantDetailContent() {
   const [searchQuery, setSearchQuery] = useState('');
   
   // Use global context instead of local state
-  const { cart, addToCart, removeFromCart, updateQuantity, clearCart, cartTotal, user } = useAppContext();
+  const { cart, addToCart, removeFromCart, updateQuantity, clearCart, cartTotal, user, t } = useAppContext();
 
   useEffect(() => {
     if (!id) return;
@@ -71,10 +71,10 @@ function RestaurantDetailContent() {
       
       <div className="container" style={{ paddingTop: '3rem' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
-          <h2 style={{ fontSize: '1.5rem', fontWeight: 600, margin: 0 }}>Menu</h2>
+          <h2 style={{ fontSize: '1.5rem', fontWeight: 600, margin: 0 }}>{t('menu')}</h2>
           <input 
             type="text" 
-            placeholder="Search for a dish..." 
+            placeholder={t('search_dish')} 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             style={{ padding: '0.75rem 1rem', borderRadius: '0.5rem', border: '1px solid var(--border)', background: 'var(--surface)', color: 'var(--foreground)', minWidth: '250px' }}
@@ -98,7 +98,7 @@ function RestaurantDetailContent() {
                   <h3 className="card-title">{item.name}</h3>
                   {(item.is_available === 0 || item.is_available === false) && (
                     <span style={{ background: 'rgba(239, 68, 68, 0.2)', color: '#f87171', padding: '0.2rem 0.6rem', borderRadius: '1rem', fontSize: '0.8rem', fontWeight: 'bold' }}>
-                      Sold Out
+                      {t('sold_out')}
                     </span>
                   )}
                 </div>
@@ -125,7 +125,7 @@ function RestaurantDetailContent() {
                   }}
                   disabled={item.is_available === 0 || item.is_available === false}
                 >
-                  {(item.is_available === 0 || item.is_available === false) ? 'Unavailable' : 'Add to Order'}
+                  {(item.is_available === 0 || item.is_available === false) ? t('unavailable') : t('add_to_order')}
                 </button>
               </div>
             </div>
@@ -133,9 +133,9 @@ function RestaurantDetailContent() {
         </div>
 
         {/* Reviews Section */}
-        <h2 style={{ fontSize: '1.5rem', fontWeight: 600, margin: '3rem 0 1.5rem 0' }}>Customer Reviews</h2>
+        <h2 style={{ fontSize: '1.5rem', fontWeight: 600, margin: '3rem 0 1.5rem 0' }}>{t('customer_reviews')}</h2>
         {reviews.length === 0 ? (
-          <p style={{ opacity: 0.8 }}>No reviews yet. Order and be the first to review!</p>
+          <p style={{ opacity: 0.8 }}>{t('no_reviews')}</p>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', maxWidth: '800px' }}>
             {reviews.map(review => (
@@ -158,7 +158,7 @@ function RestaurantDetailContent() {
         {/* Basic Cart UI */}
         {cart.length > 0 && (
           <div className="glass animate-fade-in-up" style={{ position: 'fixed', bottom: '2rem', right: '2rem', padding: '1.5rem', borderRadius: '1.5rem', width: '320px', boxShadow: 'var(--shadow-xl)' }}>
-            <h3 style={{ marginBottom: '1rem', fontWeight: 700, fontSize: '1.2rem' }}>Your Cart ({cart.reduce((sum, item) => sum + item.quantity, 0)})</h3>
+            <h3 style={{ marginBottom: '1rem', fontWeight: 700, fontSize: '1.2rem' }}>{t('your_cart')} ({cart.reduce((sum, item) => sum + item.quantity, 0)})</h3>
             <ul style={{ listStyle: 'none', marginBottom: '1rem', maxHeight: '200px', overflowY: 'auto' }}>
               {cart.map((c, i) => (
                 <li key={i} style={{ display: 'flex', flexDirection: 'column', marginBottom: '1rem', opacity: 0.9 }}>
@@ -178,11 +178,11 @@ function RestaurantDetailContent() {
               ))}
             </ul>
             <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 700, borderTop: '1px solid var(--border)', paddingTop: '1rem', marginBottom: '1.25rem', fontSize: '1.1rem' }}>
-              <span>Total:</span>
+              <span>{t('total')}:</span>
               <span style={{ color: 'var(--primary)' }}>{cartTotal.toFixed(2)} ETB</span>
             </div>
             <button className="btn-primary" style={{ width: '100%', padding: '1rem' }} onClick={handleCheckout}>
-              {user ? 'Proceed to Checkout' : 'Log in to Checkout'}
+              {user ? t('proceed_checkout') : t('login_checkout')}
             </button>
           </div>
         )}

@@ -1,8 +1,10 @@
 "use client";
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { useAppContext } from '@/context/AppContext';
 
 export default function RestaurantsPage() {
+  const { t } = useAppContext();
   const [restaurants, setRestaurants] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -27,10 +29,10 @@ export default function RestaurantsPage() {
   return (
     <main className="section bg-surface" style={{ paddingTop: '8rem', minHeight: '100vh' }}>
       <div className="container">
-        <h1 className="section-title">Explore Restaurants</h1>
+        <h1 className="section-title">{t('explore_restaurants')}</h1>
         
         {loading ? (
-          <p style={{ textAlign: 'center' }}>Loading restaurants...</p>
+          <p style={{ textAlign: 'center' }}>{t('loading_restaurants')}</p>
         ) : (
           <div className="grid grid-cols-3">
             {restaurants.map((restaurant: any) => (

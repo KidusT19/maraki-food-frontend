@@ -6,7 +6,7 @@ import { useAppContext } from '@/context/AppContext';
 import Link from 'next/link';
 
 export default function CheckoutPage() {
-  const { user, cart, cartTotal, clearCart } = useAppContext();
+  const { user, cart, cartTotal, clearCart, t } = useAppContext();
   const router = useRouter();
   
   const [paymentMethod, setPaymentMethod] = useState<'telebirr' | 'cbe'>('telebirr');
@@ -101,9 +101,9 @@ export default function CheckoutPage() {
       <main style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'radial-gradient(circle at center, #064e3b, #0f172a 60%)', color: '#fff' }}>
         <div style={{ textAlign: 'center', animation: 'fade-in-up 0.5s ease-out' }}>
           <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>✅</div>
-          <h2 style={{ fontSize: '2rem', marginBottom: '1rem' }}>Payment Successful!</h2>
-          <p style={{ color: '#cbd5e1' }}>Your order has been sent to the restaurant.</p>
-          <p style={{ color: '#cbd5e1', fontSize: '0.9rem', marginTop: '1rem' }}>Redirecting to your orders...</p>
+          <h2 style={{ fontSize: '2rem', marginBottom: '1rem' }}>{t('payment_successful')}</h2>
+          <p style={{ color: '#cbd5e1' }}>{t('order_sent')}</p>
+          <p style={{ color: '#cbd5e1', fontSize: '0.9rem', marginTop: '1rem' }}>{t('redirecting')}</p>
         </div>
       </main>
     );
@@ -112,13 +112,13 @@ export default function CheckoutPage() {
   return (
     <main className="section" style={{ paddingTop: '8rem', minHeight: '100vh', background: 'radial-gradient(circle at top center, #1e1b4b, #0f172a 50%, #020617 100%)', color: '#f8fafc' }}>
       <div className="container" style={{ maxWidth: '900px' }}>
-        <Link href="/restaurants" style={{ color: 'var(--primary)', textDecoration: 'none', display: 'inline-block', marginBottom: '2rem' }}>&larr; Back to Menu</Link>
+        <Link href="/restaurants" style={{ color: 'var(--primary)', textDecoration: 'none', display: 'inline-block', marginBottom: '2rem' }}>&larr; {t('back_to_menu')}</Link>
         
         <div className="grid" style={{ gridTemplateColumns: '1fr 1fr', gap: '2rem', alignItems: 'start' }}>
           
           {/* Left Column: Order Summary */}
           <div style={{ background: 'rgba(255, 255, 255, 0.05)', backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)', border: '1px solid rgba(255, 255, 255, 0.1)', borderRadius: '1.5rem', padding: '2rem' }}>
-            <h2 style={{ fontSize: '1.5rem', marginBottom: '1.5rem', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '1rem' }}>Order Summary</h2>
+            <h2 style={{ fontSize: '1.5rem', marginBottom: '1.5rem', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '1rem' }}>{t('order_summary')}</h2>
             <ul style={{ listStyle: 'none', marginBottom: '2rem' }}>
               {cart.map((item, idx) => (
                 <li key={idx} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem', opacity: 0.9 }}>
@@ -131,14 +131,14 @@ export default function CheckoutPage() {
             </ul>
             
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '1.2rem', fontWeight: 700, borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '1rem' }}>
-              <span>Total to Pay:</span>
+              <span>{t('total_to_pay')}:</span>
               <span style={{ color: 'var(--primary)' }}>{cartTotal.toFixed(2)} ETB</span>
             </div>
             
             <div style={{ marginTop: '2rem' }}>
-              <h3 style={{ fontSize: '1.2rem', marginBottom: '1rem', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '0.5rem' }}>Delivery Information</h3>
+              <h3 style={{ fontSize: '1.2rem', marginBottom: '1rem', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '0.5rem' }}>{t('delivery_information')}</h3>
               <label style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '0.9rem', color: '#cbd5e1', marginBottom: '1rem' }}>
-                Delivery Address (Building, Street, Area) *
+                {t('delivery_address')}
                 <input 
                   type="text" 
                   placeholder="e.g. Bole Atlas, behind Desalegn Hotel" 
@@ -151,7 +151,7 @@ export default function CheckoutPage() {
               </label>
               
               <label style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '0.9rem', color: '#cbd5e1' }}>
-                Contact Phone Number *
+                {t('contact_phone')}
                 <input 
                   type="tel" 
                   placeholder="09XX XXX XXX" 
@@ -167,7 +167,7 @@ export default function CheckoutPage() {
 
           {/* Right Column: Payment Details */}
           <div style={{ background: 'rgba(255, 255, 255, 0.05)', backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)', border: '1px solid rgba(255, 255, 255, 0.1)', borderRadius: '1.5rem', padding: '2rem' }}>
-            <h2 style={{ fontSize: '1.5rem', marginBottom: '1.5rem', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '1rem' }}>Payment Details</h2>
+            <h2 style={{ fontSize: '1.5rem', marginBottom: '1.5rem', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '1rem' }}>{t('payment_details')}</h2>
             
             {/* Payment Method Tabs */}
             <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '2rem' }}>
@@ -190,23 +190,23 @@ export default function CheckoutPage() {
             <form id="checkout-form" onSubmit={handlePayment} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               {paymentMethod === 'telebirr' && (
                 <>
-                  <p style={{ fontSize: '0.9rem', color: '#cbd5e1', marginBottom: '0.5rem' }}>Enter your Telebirr mobile number to begin.</p>
+                  <p style={{ fontSize: '0.9rem', color: '#cbd5e1', marginBottom: '0.5rem' }}>{t('enter_telebirr')}</p>
                   <label style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '0.9rem', color: '#cbd5e1' }}>
-                    Phone Number
+                    {t('phone_number')}
                     <input type="tel" placeholder="09XX XXX XXX" required value={phone} onChange={e => setPhone(e.target.value)} style={{ padding: '0.8rem', borderRadius: '0.5rem', border: '1px solid rgba(255,255,255,0.2)', background: 'rgba(0,0,0,0.2)', color: 'white' }} />
                   </label>
                   
                   <div style={{ marginTop: '1rem', padding: '1rem', background: 'rgba(0,0,0,0.2)', borderRadius: '0.5rem', border: '1px dashed rgba(255,255,255,0.2)' }}>
-                    <h4 style={{ marginBottom: '1rem', color: '#fff', fontSize: '1rem' }}>Manual Verification</h4>
-                    <p style={{ fontSize: '0.85rem', color: '#cbd5e1', marginBottom: '1rem' }}>Please complete the transfer to <strong>0911XXXXXX</strong> and upload your receipt.</p>
+                    <h4 style={{ marginBottom: '1rem', color: '#fff', fontSize: '1rem' }}>{t('manual_verification')}</h4>
+                    <p style={{ fontSize: '0.85rem', color: '#cbd5e1', marginBottom: '1rem' }}>{t('transfer_to_telebirr')} <strong>0911XXXXXX</strong> {t('upload_receipt')}</p>
                     
                     <label style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '0.9rem', color: '#cbd5e1', marginBottom: '1rem' }}>
-                      Transaction ID
+                      {t('transaction_id')}
                       <input type="text" placeholder="e.g. 7A8B9C" required value={transactionId} onChange={e => setTransactionId(e.target.value)} style={{ padding: '0.8rem', borderRadius: '0.5rem', border: '1px solid rgba(255,255,255,0.2)', background: 'rgba(0,0,0,0.2)', color: 'white' }} />
                     </label>
                     
                     <label style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '0.9rem', color: '#cbd5e1' }}>
-                      Screenshot of Receipt
+                      {t('screenshot_receipt')}
                       <input type="file" accept="image/*" required onChange={e => setReceiptFile(e.target.files?.[0] || null)} style={{ padding: '0.5rem 0', color: 'white' }} />
                     </label>
                   </div>
@@ -218,21 +218,21 @@ export default function CheckoutPage() {
               {paymentMethod === 'cbe' && (
                 <>
                   <div style={{ marginTop: '0.5rem', padding: '1rem', background: 'rgba(0,0,0,0.2)', borderRadius: '0.5rem', border: '1px dashed rgba(255,255,255,0.2)' }}>
-                    <h4 style={{ marginBottom: '1rem', color: '#fff', fontSize: '1rem' }}>CBE Bank Transfer</h4>
-                    <p style={{ fontSize: '0.85rem', color: '#cbd5e1', marginBottom: '1rem' }}>Please transfer the total amount to <strong>1000987654321</strong> (Maraki Food Zones) and provide your details below.</p>
+                    <h4 style={{ marginBottom: '1rem', color: '#fff', fontSize: '1rem' }}>{t('cbe_transfer')}</h4>
+                    <p style={{ fontSize: '0.85rem', color: '#cbd5e1', marginBottom: '1rem' }}>{t('transfer_to_cbe')} <strong>1000987654321</strong> (Maraki Food Zones) {t('upload_receipt')}</p>
                     
                     <label style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '0.9rem', color: '#cbd5e1', marginBottom: '1rem' }}>
-                      Your CBE Account Number (Must start with 1000)
+                      {t('cbe_account')}
                       <input type="text" pattern="^1000\d+$" placeholder="e.g. 1000123456789" required value={cbeAccount} onChange={e => setCbeAccount(e.target.value)} onInvalid={e => (e.target as HTMLInputElement).setCustomValidity('Account number must start with 1000')} onInput={e => (e.target as HTMLInputElement).setCustomValidity('')} style={{ padding: '0.8rem', borderRadius: '0.5rem', border: '1px solid rgba(255,255,255,0.2)', background: 'rgba(0,0,0,0.2)', color: 'white' }} />
                     </label>
                     
                     <label style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '0.9rem', color: '#cbd5e1', marginBottom: '1rem' }}>
-                      Transaction ID (Optional)
+                      {t('transaction_id')} (Optional)
                       <input type="text" placeholder="e.g. FT23..." value={transactionId} onChange={e => setTransactionId(e.target.value)} style={{ padding: '0.8rem', borderRadius: '0.5rem', border: '1px solid rgba(255,255,255,0.2)', background: 'rgba(0,0,0,0.2)', color: 'white' }} />
                     </label>
                     
                     <label style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '0.9rem', color: '#cbd5e1' }}>
-                      Screenshot of Receipt
+                      {t('screenshot_receipt')}
                       <input type="file" accept="image/*" required onChange={e => setReceiptFile(e.target.files?.[0] || null)} style={{ padding: '0.5rem 0', color: 'white' }} />
                     </label>
                   </div>
@@ -250,7 +250,7 @@ export default function CheckoutPage() {
                   opacity: isProcessing ? 0.7 : 1,
                   background: paymentMethod === 'telebirr' ? '#ea580c' : '#a855f7'
                 }}>
-                {isProcessing ? 'Processing Payment...' : `Pay ${cartTotal.toFixed(2)} ETB`}
+                {isProcessing ? '...' : t('pay_btn').replace('{total}', cartTotal.toFixed(2))}
               </button>
             </form>
           </div>
