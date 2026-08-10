@@ -39,8 +39,26 @@ export default function OrdersPage() {
   };
 
   useEffect(() => {
-    fetch('https://maraki-food-backend.onrender.com/api/orders')
-      .then(res => res.json())
+    const token = localStorage.getItem('token');
+    if (!token) {
+      window.location.href = '/login';
+      return;
+    }
+
+    fetch('https://maraki-food-backend.onrender.com/api/orders', {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+      .then(res => {
+        if (res.status === 401 || res.status === 403) {
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          window.location.href = '/login';
+          throw new Error('Unauthorized');
+        }
+        return res.json();
+      })
       .then(data => {
         if (Array.isArray(data)) {
           setOrders(data);
