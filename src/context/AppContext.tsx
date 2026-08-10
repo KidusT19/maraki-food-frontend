@@ -101,7 +101,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     setUser(null);
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    router.push('/login');
+    router.push('/');
   };
 
   const addToCart = (newItem: CartItem) => {
