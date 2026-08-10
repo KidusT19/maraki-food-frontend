@@ -52,13 +52,23 @@ function RestaurantDetailContent() {
   if (!restaurant) return <div style={{ paddingTop: '10rem', textAlign: 'center' }}>Loading menu...</div>;
 
   return (
-    <main className="section" style={{ paddingTop: '8rem', minHeight: '100vh' }}>
-      <div className="container">
-        <h1 className="section-title">{restaurant.name}</h1>
-        <p style={{ textAlign: 'center', margin: '-2rem 0 3rem 0', opacity: 0.8, fontSize: '1.2rem' }}>
-          {restaurant.description}
-        </p>
-        
+    <main style={{ minHeight: '100vh', paddingBottom: '4rem' }}>
+      <div style={{ position: 'relative', width: '100%', height: '400px' }}>
+        {restaurant.image_url ? (
+          <img src={restaurant.image_url} alt={restaurant.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+        ) : (
+          <div style={{ width: '100%', height: '100%', background: 'linear-gradient(to right, #0f172a, #1e293b)' }}></div>
+        )}
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, #0f172a, transparent)' }}></div>
+        <div className="container" style={{ position: 'absolute', bottom: '2rem', left: 0, right: 0 }}>
+          <h1 style={{ fontSize: '3.5rem', fontWeight: 800, color: 'white', marginBottom: '0.5rem', textShadow: '0 2px 10px rgba(0,0,0,0.5)' }}>{restaurant.name}</h1>
+          {restaurant.description && (
+            <p style={{ fontSize: '1.2rem', color: '#cbd5e1', maxWidth: '800px', textShadow: '0 1px 5px rgba(0,0,0,0.5)' }}>{restaurant.description}</p>
+          )}
+        </div>
+      </div>
+      
+      <div className="container" style={{ paddingTop: '3rem' }}>
         <h2 style={{ fontSize: '1.5rem', fontWeight: 600, marginBottom: '1.5rem' }}>Menu</h2>
         <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))' }}>
           {restaurant.menu_items?.map((item: any) => (
