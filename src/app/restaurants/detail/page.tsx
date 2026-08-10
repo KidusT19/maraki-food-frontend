@@ -9,6 +9,7 @@ function RestaurantDetailContent() {
   const router = useRouter();
   const [restaurant, setRestaurant] = useState<any>(null);
   const [reviews, setReviews] = useState<any[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
   
   // Use global context instead of local state
   const { cart, addToCart, removeFromCart, updateQuantity, clearCart, cartTotal, user } = useAppContext();
@@ -69,9 +70,19 @@ function RestaurantDetailContent() {
       </div>
       
       <div className="container" style={{ paddingTop: '3rem' }}>
-        <h2 style={{ fontSize: '1.5rem', fontWeight: 600, marginBottom: '1.5rem' }}>Menu</h2>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
+          <h2 style={{ fontSize: '1.5rem', fontWeight: 600, margin: 0 }}>Menu</h2>
+          <input 
+            type="text" 
+            placeholder="Search for a dish..." 
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            style={{ padding: '0.75rem 1rem', borderRadius: '0.5rem', border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(255,255,255,0.05)', color: 'white', minWidth: '250px' }}
+          />
+        </div>
+        
         <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))' }}>
-          {restaurant.menu_items?.map((item: any) => (
+          {restaurant.menu_items?.filter((item: any) => item.name.toLowerCase().includes(searchQuery.toLowerCase()) || item.description?.toLowerCase().includes(searchQuery.toLowerCase())).map((item: any) => (
             <div className="card" key={item.id} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', opacity: (item.is_available === 0 || item.is_available === false) ? 0.6 : 1, overflow: 'hidden' }}>
               {item.image_url && (
                 <div style={{ margin: '-1.5rem -1.5rem 1.5rem -1.5rem', height: '200px', overflow: 'hidden' }}>
