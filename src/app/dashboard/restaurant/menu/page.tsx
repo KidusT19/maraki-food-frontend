@@ -8,6 +8,7 @@ export default function MenuManager() {
   const [restaurant, setRestaurant] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [isAdding, setIsAdding] = useState(false);
+  const [editingId, setEditingId] = useState<number | null>(null);
   
   // form state
   const [name, setName] = useState('');
@@ -77,7 +78,26 @@ export default function MenuManager() {
     }
   };
 
-  const handleAdd = async (e: React.FormEvent) => {
+  const handleEditClick = (item: any) => {
+    setEditingId(item.id);
+    setName(item.name);
+    setDescription(item.description);
+    setPrice(item.price);
+    setImage(null);
+    setIsAdding(true);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleCancelForm = () => {
+    setIsAdding(false);
+    setEditingId(null);
+    setName('');
+    setDescription('');
+    setPrice('');
+    setImage(null);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const token = localStorage.getItem('token');
     const formData = new FormData();
@@ -87,25 +107,27 @@ export default function MenuManager() {
     if (image) formData.append('image', image);
 
     try {
-      const res = await fetch('https://maraki-food-backend.onrender.com/api/menu_items', {
-        method: 'POST',
+      const url = editingId 
+        ? `https://maraki-food-backend.onrender.com/api/menu_items/${editingId}`
+        : 'https://maraki-food-backend.onrender.com/api/menu_items';
+      
+      const res = await fetch(url, {
+        method: editingId ? 'PUT' : 'POST',
         headers: { 'Authorization': `Bearer ${token}` },
         body: formData
       });
       
       if (res.ok) {
-        const newItem = await res.json();
+        const savedItem = await res.json();
         setRestaurant({
           ...restaurant,
-          menu_items: [...restaurant.menu_items, newItem]
+          menu_items: editingId 
+            ? restaurant.menu_items.map((m: any) => m.id === editingId ? savedItem : m)
+            : [...restaurant.menu_items, savedItem]
         });
-        setIsAdding(false);
-        setName('');
-        setDescription('');
-        setPrice('');
-        setImage(null);
+        handleCancelForm();
       } else {
-        alert("Failed to add item");
+        alert("Failed to save item");
       }
     } catch (err) {
       console.error(err);
@@ -118,20 +140,25 @@ export default function MenuManager() {
     <>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
         <h1 className="section-title" style={{ color: '#f8fafc', margin: 0 }}>Menu Manager</h1>
-        <button className="btn-primary" onClick={() => setIsAdding(!isAdding)}>
+        <button className="btn-primary" onClick={isAdding ? handleCancelForm : () => setIsAdding(true)}>
           {isAdding ? 'Cancel' : '+ Add New Dish'}
         </button>
       </div>
 
       {isAdding && (
-        <form onSubmit={handleAdd} style={{ background: 'rgba(255,255,255,0.05)', padding: '2rem', borderRadius: '1rem', marginBottom: '2rem', border: '1px solid rgba(255,255,255,0.1)' }}>
-          <h3 style={{ margin: '0 0 1rem 0' }}>Add New Dish</h3>
+        <form onSubmit={handleSubmit} style={{ background: 'rgba(255,255,255,0.05)', padding: '2rem', borderRadius: '1rem', marginBottom: '2rem', border: '1px solid rgba(255,255,255,0.1)' }}>
+          <h3 style={{ margin: '0 0 1rem 0' }}>{editingId ? 'Edit Dish' : 'Add New Dish'}</h3>
           <div style={{ display: 'grid', gap: '1rem' }}>
             <input type="text" placeholder="Dish Name" className="input-field" required value={name} onChange={e => setName(e.target.value)} />
             <textarea placeholder="Description" className="input-field" required value={description} onChange={e => setDescription(e.target.value)} style={{ minHeight: '100px' }} />
             <input type="number" placeholder="Price (ETB)" className="input-field" required value={price} onChange={e => setPrice(e.target.value)} />
-            <input type="file" accept="image/*" className="input-field" onChange={e => setImage(e.target.files ? e.target.files[0] : null)} />
-            <button type="submit" className="btn-primary">Save Dish</button>
+            <div>
+              <p style={{ margin: '0 0 0.5rem 0', fontSize: '0.9rem', color: '#94a3b8' }}>
+                {editingId ? 'Upload new image (optional)' : 'Upload image (optional)'}
+              </p>
+              <input type="file" accept="image/*" className="input-field" onChange={e => setImage(e.target.files ? e.target.files[0] : null)} />
+            </div>
+            <button type="submit" className="btn-primary">{editingId ? 'Save Changes' : 'Save Dish'}</button>
           </div>
         </form>
       )}
@@ -155,7 +182,7 @@ export default function MenuManager() {
               {item.image_url ? (
                  <img src={`https://maraki-food-backend.onrender.com${item.image_url}`} alt={item.name} style={{ width: '100%', height: '200px', objectFit: 'cover' }} />
               ) : (
-                 <div style={{ width: '100%', height: '200px', background: 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>No Image</div>
+                 <div style={{ width: '100%', height: '200px', background: 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94a3b8' }}>No Image</div>
               )}
               
               <div style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', flex: 1 }}>
@@ -167,25 +194,29 @@ export default function MenuManager() {
                   {item.description}
                 </p>
                 
-                <div style={{ display: 'flex', gap: '0.5rem', marginTop: 'auto' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginTop: 'auto' }}>
                   <button 
                     onClick={() => handleToggleAvailability(item)} 
                     style={{ 
-                      padding: '0.75rem 1rem', 
+                      padding: '0.5rem 1rem', 
                       background: (item.is_available === 1 || item.is_available === true) ? 'rgba(234, 88, 12, 0.2)' : 'rgba(16, 185, 129, 0.2)', 
                       color: (item.is_available === 1 || item.is_available === true) ? '#fb923c' : '#34d399', 
                       border: `1px solid ${(item.is_available === 1 || item.is_available === true) ? 'rgba(234, 88, 12, 0.3)' : 'rgba(16, 185, 129, 0.3)'}`, 
                       borderRadius: '0.5rem', 
                       cursor: 'pointer', 
-                      flex: 2, 
                       fontWeight: 'bold' 
                     }}
                   >
                     {(item.is_available === 1 || item.is_available === true) ? 'Mark Sold Out' : 'Mark Available'}
                   </button>
-                  <button onClick={() => handleDelete(item.id)} style={{ padding: '0.75rem 1rem', background: 'rgba(239, 68, 68, 0.2)', color: '#f87171', border: '1px solid rgba(239, 68, 68, 0.3)', borderRadius: '0.5rem', cursor: 'pointer', flex: 1, fontWeight: 'bold' }}>
-                    Delete
-                  </button>
+                  <div style={{ display: 'flex', gap: '0.5rem' }}>
+                    <button onClick={() => handleEditClick(item)} style={{ padding: '0.5rem 1rem', background: 'rgba(255, 255, 255, 0.1)', color: 'white', border: 'none', borderRadius: '0.5rem', cursor: 'pointer', flex: 1, fontWeight: 'bold' }}>
+                      Edit
+                    </button>
+                    <button onClick={() => handleDelete(item.id)} style={{ padding: '0.5rem 1rem', background: 'rgba(239, 68, 68, 0.2)', color: '#f87171', border: '1px solid rgba(239, 68, 68, 0.3)', borderRadius: '0.5rem', cursor: 'pointer', flex: 1, fontWeight: 'bold' }}>
+                      Delete
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
