@@ -9,7 +9,7 @@ export default function CheckoutPage() {
   const { user, cart, cartTotal, clearCart } = useAppContext();
   const router = useRouter();
   
-  const [paymentMethod, setPaymentMethod] = useState<'telebirr' | 'chapa' | 'cbe'>('telebirr');
+  const [paymentMethod, setPaymentMethod] = useState<'telebirr' | 'cbe'>('telebirr');
   const [isProcessing, setIsProcessing] = useState(false);
   const [paymentSuccess, setPaymentSuccess] = useState(false);
 
@@ -180,17 +180,10 @@ export default function CheckoutPage() {
               </button>
               <button 
                 type="button"
-                onClick={() => setPaymentMethod('chapa')}
-                style={{ flex: 1, padding: '0.75rem', borderRadius: '0.5rem', border: '1px solid', borderColor: paymentMethod === 'chapa' ? '#10b981' : 'rgba(255,255,255,0.1)', background: paymentMethod === 'chapa' ? 'rgba(16, 185, 129, 0.1)' : 'transparent', color: '#fff', cursor: 'pointer', fontWeight: 600, transition: 'all 0.2s' }}
-              >
-                💳 Chapa
-              </button>
-              <button 
-                type="button"
                 onClick={() => setPaymentMethod('cbe')}
                 style={{ flex: 1, padding: '0.75rem', borderRadius: '0.5rem', border: '1px solid', borderColor: paymentMethod === 'cbe' ? '#a855f7' : 'rgba(255,255,255,0.1)', background: paymentMethod === 'cbe' ? 'rgba(168, 85, 247, 0.1)' : 'transparent', color: '#fff', cursor: 'pointer', fontWeight: 600, transition: 'all 0.2s' }}
               >
-                🏦 CBE Bank
+                CBE Bank
               </button>
             </div>
 
@@ -220,14 +213,7 @@ export default function CheckoutPage() {
                 </>
               )}
 
-              {paymentMethod === 'chapa' && (
-                <>
-                  <p style={{ fontSize: '0.9rem', color: '#cbd5e1', marginBottom: '0.5rem' }}>You will be securely redirected to Chapa to complete your transaction.</p>
-                  <div style={{ padding: '1rem', background: 'rgba(255,255,255,0.05)', borderRadius: '0.5rem', textAlign: 'center', border: '1px dashed rgba(255,255,255,0.2)' }}>
-                    Chapa Secure Checkout
-                  </div>
-                </>
-              )}
+
 
               {paymentMethod === 'cbe' && (
                 <>
@@ -262,7 +248,7 @@ export default function CheckoutPage() {
                   padding: '1rem', 
                   fontSize: '1.1rem',
                   opacity: isProcessing ? 0.7 : 1,
-                  background: paymentMethod === 'telebirr' ? '#ea580c' : paymentMethod === 'chapa' ? '#10b981' : '#a855f7'
+                  background: paymentMethod === 'telebirr' ? '#ea580c' : '#a855f7'
                 }}>
                 {isProcessing ? 'Processing Payment...' : `Pay ${cartTotal.toFixed(2)} ETB`}
               </button>
