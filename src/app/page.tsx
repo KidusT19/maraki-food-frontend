@@ -57,7 +57,7 @@ export default function Home() {
       {/* Features Section */}
       <section className="section bg-surface">
         <div className="container">
-          <h2 className="section-title">Why Choose Maraki Food Zones?</h2>
+          <h2 className="section-title">{t('why_choose_us' as any) || 'Why Choose Maraki Food Zones?'}</h2>
           <div className="grid grid-cols-3">
             <div className="card">
               <div className="card-icon">

@@ -17,9 +17,10 @@ export const translations = {
     feature1_title: "Fast Delivery",
     feature1_desc: "Average delivery time of 28 minutes. Watch your driver approach in real-time.",
     feature2_title: "Premium Quality",
-    feature2_desc: "We partner exclusively with top-tier restaurants to guarantee a gourmet experience.",
+    feature2_desc: "We partner with only the best restaurants.",
     feature3_title: "24/7 Support",
-    feature3_desc: "Our concierge team is always available to ensure your perfect meal.",
+    feature3_desc: "Our customer support team is always ready to help.",
+    why_choose_us: "Why Choose Maraki Food Zones?",
 
     // Login/Register
     login_title: "Welcome Back",
@@ -217,7 +218,8 @@ export const translations = {
     feature2_title: "ከፍተኛ ጥራት",
     feature2_desc: "ከምርጥ ምግብ ቤቶች ጋር ብቻ እንሰራለን።",
     feature3_title: "የ24/7 ድጋፍ",
-    feature3_desc: "ማንኛውም ጥያቄ ካለዎት የድጋፍ ቡድናችን ሁልጊዜ ዝግጁ ነው።",
+    feature3_desc: "ማንኛውም ጥያቄ ካሎት የድጋፍ ቡድናችን ሁልጊዜ ዝግጁ ነው።",
+    why_choose_us: "ለምን ማራኪ ፉድ ዞንን ይመርጣሉ?",
 
     // Login/Register
     login_title: "እንኳን ደህና መጡ",
