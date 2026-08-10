@@ -120,10 +120,24 @@ export default function Navbar() {
       </Link>
       
       <div className="nav-right-cluster">
-        {user && (
+        {user ? (
           <span style={{ color: '#cbd5e1', fontSize: '1rem', fontWeight: 600 }}>
             {user.name.split(' ')[0]}
           </span>
+        ) : (
+          <Link href="/login" style={{ 
+            color: '#f8fafc', 
+            textDecoration: 'none', 
+            fontWeight: 600, 
+            fontSize: '0.95rem',
+            padding: '0.4rem 1rem',
+            borderRadius: '2rem',
+            border: '1px solid rgba(255,255,255,0.3)',
+            transition: 'background 0.2s',
+          }}
+          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.1)'}
+          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+          >{t('nav_login')}</Link>
         )}
         <button 
           onClick={() => setLanguage(language === 'en' ? 'am' : 'en')}
@@ -166,7 +180,6 @@ export default function Navbar() {
           </>
         ) : (
           <>
-            <Link href="/login" style={{ color: '#f8fafc', textDecoration: 'none', fontWeight: 600, fontSize: '1.1rem' }} onClick={closeMenu}>{t('nav_login')}</Link>
             <Link href="/register" className="btn-primary" style={{ padding: '0.5rem 1.5rem', fontSize: '1rem', width: '100%', textAlign: 'center' }} onClick={closeMenu}>{t('register_title')}</Link>
           </>
         )}
