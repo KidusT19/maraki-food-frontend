@@ -62,7 +62,16 @@ function RestaurantDetailContent() {
         <h2 style={{ fontSize: '1.5rem', fontWeight: 600, marginBottom: '1.5rem' }}>Menu</h2>
         <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))' }}>
           {restaurant.menu_items?.map((item: any) => (
-            <div className="card" key={item.id} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', opacity: (item.is_available === 0 || item.is_available === false) ? 0.6 : 1 }}>
+            <div className="card" key={item.id} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', opacity: (item.is_available === 0 || item.is_available === false) ? 0.6 : 1, overflow: 'hidden' }}>
+              {item.image_url && (
+                <div style={{ margin: '-1.5rem -1.5rem 1.5rem -1.5rem', height: '200px', overflow: 'hidden' }}>
+                  <img 
+                    src={item.image_url.startsWith('/uploads') ? `https://maraki-food-backend.onrender.com${item.image_url}` : item.image_url} 
+                    alt={item.name} 
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                  />
+                </div>
+              )}
               <div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                   <h3 className="card-title">{item.name}</h3>
@@ -95,7 +104,7 @@ function RestaurantDetailContent() {
                   }}
                   disabled={item.is_available === 0 || item.is_available === false}
                 >
-                  {(item.is_available === 0 || item.is_available === false) ? 'Unavailable' : 'Add to Cart'}
+                  {(item.is_available === 0 || item.is_available === false) ? 'Unavailable' : 'Add to Order'}
                 </button>
               </div>
             </div>
