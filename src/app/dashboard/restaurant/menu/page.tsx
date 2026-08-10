@@ -180,7 +180,7 @@ export default function MenuManager() {
               flexDirection: 'column'
             }}>
               {item.image_url ? (
-                 <img src={`https://maraki-food-backend.onrender.com${item.image_url}`} alt={item.name} style={{ width: '100%', height: '200px', objectFit: 'cover' }} />
+                 <img src={item.image_url.startsWith('http') ? item.image_url : `https://maraki-food-backend.onrender.com${item.image_url}`} alt={item.name} style={{ width: '100%', height: '200px', objectFit: 'cover' }} />
               ) : (
                  <div style={{ width: '100%', height: '200px', background: 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94a3b8' }}>No Image</div>
               )}
