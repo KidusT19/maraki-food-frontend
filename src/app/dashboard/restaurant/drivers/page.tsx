@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from 'react';
+import { useAppContext } from '@/context/AppContext';
 
 export default function RestaurantDrivers() {
+  const { t } = useAppContext();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -48,19 +50,19 @@ export default function RestaurantDrivers() {
   return (
     <>
       <div style={{ marginBottom: '2rem' }}>
-        <h1 className="section-title" style={{ color: '#f8fafc', margin: 0 }}>Driver Management</h1>
-        <p style={{ color: '#94a3b8', marginTop: '0.5rem' }}>Create login credentials for your delivery drivers.</p>
+        <h1 className="section-title" style={{ color: '#f8fafc', margin: 0 }}>{t('driver_management' as any) || 'Driver Management'}</h1>
+        <p style={{ color: '#94a3b8', marginTop: '0.5rem' }}>{t('driver_management_desc' as any) || 'Create login credentials for your delivery drivers.'}</p>
       </div>
 
       <div style={{ maxWidth: '500px', background: 'rgba(255,255,255,0.05)', padding: '2rem', borderRadius: '1rem', border: '1px solid rgba(255,255,255,0.1)' }}>
-        <h3 style={{ margin: '0 0 1.5rem 0' }}>Register New Driver</h3>
+        <h3 style={{ margin: '0 0 1.5rem 0' }}>{t('register_new_driver' as any) || 'Register New Driver'}</h3>
         
         {successMsg && <div style={{ backgroundColor: '#10b98122', color: '#10b981', padding: '1rem', borderRadius: '0.5rem', marginBottom: '1.5rem' }}>{successMsg}</div>}
         {errorMsg && <div style={{ backgroundColor: '#ef444422', color: '#ef4444', padding: '1rem', borderRadius: '0.5rem', marginBottom: '1.5rem' }}>{errorMsg}</div>}
 
         <form onSubmit={handleCreateDriver} autoComplete="off" style={{ display: 'grid', gap: '1rem' }}>
           <div>
-            <label style={{ display: 'block', marginBottom: '0.5rem', color: '#cbd5e1', fontSize: '0.9rem' }}>Driver Full Name</label>
+            <label style={{ display: 'block', marginBottom: '0.5rem', color: '#cbd5e1', fontSize: '0.9rem' }}>{t('driver_full_name' as any) || 'Driver Full Name'}</label>
             <input 
               type="text" 
               className="input-field" 
@@ -72,7 +74,7 @@ export default function RestaurantDrivers() {
           </div>
 
           <div>
-            <label style={{ display: 'block', marginBottom: '0.5rem', color: '#cbd5e1', fontSize: '0.9rem' }}>Email Address</label>
+            <label style={{ display: 'block', marginBottom: '0.5rem', color: '#cbd5e1', fontSize: '0.9rem' }}>{t('email_address' as any) || 'Email Address'}</label>
             <input 
               type="email" 
               className="input-field" 
@@ -84,7 +86,7 @@ export default function RestaurantDrivers() {
           </div>
 
           <div>
-            <label style={{ display: 'block', marginBottom: '0.5rem', color: '#cbd5e1', fontSize: '0.9rem' }}>Password</label>
+            <label style={{ display: 'block', marginBottom: '0.5rem', color: '#cbd5e1', fontSize: '0.9rem' }}>{t('password' as any) || 'Password'}</label>
             <input 
               type="password" 
               className="input-field" 
@@ -94,11 +96,11 @@ export default function RestaurantDrivers() {
               onChange={e => setPassword(e.target.value)} 
               minLength={6}
             />
-            <p style={{ fontSize: '0.8rem', color: '#94a3b8', marginTop: '0.5rem' }}>Share these credentials with the driver so they can log into the Driver Portal.</p>
+            <p style={{ fontSize: '0.8rem', color: '#94a3b8', marginTop: '0.5rem' }}>{t('share_credentials' as any) || 'Share these credentials with the driver so they can log into the Driver Portal.'}</p>
           </div>
           
           <button type="submit" className="btn-primary" disabled={loading} style={{ marginTop: '1rem' }}>
-            {loading ? 'Creating...' : 'Create Driver Account'}
+            {loading ? (t('creating' as any) || 'Creating...') : (t('create_driver_account' as any) || 'Create Driver Account')}
           </button>
         </form>
       </div>

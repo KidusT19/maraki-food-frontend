@@ -13,7 +13,7 @@ interface CustomerData {
 }
 
 export default function CustomersPage() {
-  const { user } = useAppContext();
+  const { user, t } = useAppContext();
   const [customers, setCustomers] = useState<CustomerData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -45,24 +45,24 @@ export default function CustomersPage() {
 
   return (
     <div>
-      <h2 style={{ fontSize: '1.5rem', marginBottom: '1.5rem', fontWeight: 600 }}>Customer Directory</h2>
-      <p style={{ opacity: 0.8, marginBottom: '2rem' }}>A list of all customers who have ordered from your restaurant.</p>
+      <h2 style={{ fontSize: '1.5rem', marginBottom: '1.5rem', fontWeight: 600 }}>{t('customer_directory' as any) || 'Customer Directory'}</h2>
+      <p style={{ opacity: 0.8, marginBottom: '2rem' }}>{t('customer_directory_desc' as any) || 'A list of all customers who have ordered from your restaurant.'}</p>
 
       {customers.length === 0 ? (
         <div className="card" style={{ textAlign: 'center', padding: '3rem' }}>
-          <h3 style={{ fontSize: '1.2rem', marginBottom: '0.5rem' }}>No Customers Yet</h3>
-          <p style={{ opacity: 0.7 }}>When users place orders, they will appear here.</p>
+          <h3 style={{ fontSize: '1.2rem', marginBottom: '0.5rem' }}>{t('no_customers' as any) || 'No Customers Yet'}</h3>
+          <p style={{ opacity: 0.7 }}>{t('when_users_order' as any) || 'When users place orders, they will appear here.'}</p>
         </div>
       ) : (
         <div className="card" style={{ overflowX: 'auto' }}>
           <table style={{ width: '100%', textAlign: 'left', borderCollapse: 'collapse' }}>
             <thead>
               <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
-                <th style={{ padding: '1rem', color: '#94a3b8', fontWeight: 600 }}>Name</th>
-                <th style={{ padding: '1rem', color: '#94a3b8', fontWeight: 600 }}>Email</th>
-                <th style={{ padding: '1rem', color: '#94a3b8', fontWeight: 600 }}>Total Orders</th>
-                <th style={{ padding: '1rem', color: '#94a3b8', fontWeight: 600 }}>Total Spent</th>
-                <th style={{ padding: '1rem', color: '#94a3b8', fontWeight: 600 }}>Last Order Date</th>
+                <th style={{ padding: '1rem', color: '#94a3b8', fontWeight: 600 }}>{t('name' as any) || 'Name'}</th>
+                <th style={{ padding: '1rem', color: '#94a3b8', fontWeight: 600 }}>{t('email_th' as any) || 'Email'}</th>
+                <th style={{ padding: '1rem', color: '#94a3b8', fontWeight: 600 }}>{t('total_orders' as any) || 'Total Orders'}</th>
+                <th style={{ padding: '1rem', color: '#94a3b8', fontWeight: 600 }}>{t('total_spent' as any) || 'Total Spent'}</th>
+                <th style={{ padding: '1rem', color: '#94a3b8', fontWeight: 600 }}>{t('last_order_date' as any) || 'Last Order Date'}</th>
               </tr>
             </thead>
             <tbody>

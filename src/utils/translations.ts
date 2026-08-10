@@ -145,7 +145,57 @@ export const translations = {
     customer: "Customer",
     accept_delivery: "Accept Delivery",
     mark_picked_up: "Mark as Picked Up",
-    mark_delivered: "Mark as Delivered"
+    mark_delivered: "Mark as Delivered",
+    
+    // Restaurant Dashboard Tabs & Sections
+    analytics: "Analytics",
+    customers: "Customers",
+    settings: "Settings",
+    drivers: "Drivers",
+    
+    // Customers Page
+    customer_directory: "Customer Directory",
+    customer_directory_desc: "A list of all customers who have ordered from your restaurant.",
+    no_customers: "No Customers Yet",
+    when_users_order: "When users place orders, they will appear here.",
+    email_th: "Email",
+    total_orders: "Total Orders",
+    total_spent: "Total Spent",
+    last_order_date: "Last Order Date",
+
+    // Menu Manager Additions
+    edit_dish: "Edit Dish",
+    upload_new_image: "Upload new image (optional)",
+    upload_image: "Upload image (optional)",
+    save_changes: "Save Changes",
+    edit: "Edit",
+
+    // Analytics Page
+    analytics_dashboard: "Analytics Dashboard 📊",
+    total_revenue: "Total Revenue",
+    completed_orders_stat: "Completed Orders",
+    active_orders_stat: "Active Orders",
+    most_popular_dishes: "Most Popular Dishes",
+    ordered: "ordered",
+    not_enough_data: "Not enough data to determine popular dishes yet.",
+    
+    // Settings
+    settings_desc: "Manage your account security.",
+    update_profile: "Update Profile",
+    account_name: "Account Name",
+    email_address: "Email Address",
+    new_password: "New Password (Optional)",
+    confirm_new_password: "Confirm New Password",
+    updating: "Updating...",
+    
+    // Drivers
+    driver_management: "Driver Management",
+    driver_management_desc: "Create login credentials for your delivery drivers.",
+    register_new_driver: "Register New Driver",
+    driver_full_name: "Driver Full Name",
+    share_credentials: "Share these credentials with the driver so they can log into the Driver Portal.",
+    creating: "Creating...",
+    create_driver_account: "Create Driver Account"
   },
   am: {
     // Navbar
@@ -293,7 +343,57 @@ export const translations = {
     customer: "ደንበኛ",
     accept_delivery: "ትዕዛዙን ተቀበል (ለማድረስ)",
     mark_picked_up: "ተረክቤያለሁ",
-    mark_delivered: "አድርሻለሁ"
+    mark_delivered: "አድርሻለሁ",
+    
+    // Restaurant Dashboard Tabs & Sections
+    analytics: "ትንታኔ (Analytics)",
+    customers: "ደንበኞች",
+    settings: "ቅንብሮች",
+    drivers: "አድራሾች",
+    
+    // Customers Page
+    customer_directory: "የደንበኞች ዝርዝር",
+    customer_directory_desc: "ከእርስዎ ምግብ ቤት ያዘዙ ደንበኞች ዝርዝር።",
+    no_customers: "ምንም ደንበኛ የለም",
+    when_users_order: "ደንበኞች ሲያዙ እዚህ ይታያሉ።",
+    email_th: "ኢሜል",
+    total_orders: "አጠቃላይ ትዕዛዝ",
+    total_spent: "አጠቃላይ ክፍያ",
+    last_order_date: "የመጨረሻ ትዕዛዝ ቀን",
+
+    // Menu Manager Additions
+    edit_dish: "ምግብ አስተካክል",
+    upload_new_image: "አዲስ ፎቶ አስገባ (አማራጭ)",
+    upload_image: "ፎቶ አስገባ (አማራጭ)",
+    save_changes: "ለውጦችን አስቀምጥ",
+    edit: "አስተካክል",
+
+    // Analytics Page
+    analytics_dashboard: "የትንታኔ ዳሽቦርድ 📊",
+    total_revenue: "አጠቃላይ ገቢ",
+    completed_orders_stat: "የተጠናቀቁ ትዕዛዞች",
+    active_orders_stat: "በሂደት ያሉ ትዕዛዞች",
+    most_popular_dishes: "በብዛት የተሸጡ ምግቦች",
+    ordered: "ተዘዟል",
+    not_enough_data: "በብዛት የተሸጡ ምግቦችን ለማወቅ በቂ መረጃ የለም።",
+    
+    // Settings
+    settings_desc: "የአካውንት ደህንነትን ያስተዳድሩ።",
+    update_profile: "መገለጫን አዘምን",
+    account_name: "የአካውንት ስም",
+    email_address: "ኢሜል አድራሻ",
+    new_password: "አዲስ የይለፍ ቃል (አማራጭ)",
+    confirm_new_password: "አዲስ የይለፍ ቃል ያረጋግጡ",
+    updating: "በማዘመን ላይ...",
+    
+    // Drivers
+    driver_management: "አድራሾች አስተዳዳሪ",
+    driver_management_desc: "ለአድራሾች መግቢያ ይፍጠሩ።",
+    register_new_driver: "አዲስ አድራሽ ይመዝገቡ",
+    driver_full_name: "የአድራሹ ሙሉ ስም",
+    share_credentials: "አድራሹ ወደ አድራሽ ገፅ መግባት እንዲችል ይህን መረጃ ያጋሩት።",
+    creating: "በመፍጠር ላይ...",
+    create_driver_account: "የአድራሽ አካውንት ይፍጠሩ"
   }
 };
 

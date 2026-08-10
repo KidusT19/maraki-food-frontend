@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useAppContext } from '@/context/AppContext';
 
 export default function MenuManager() {
-  const { user } = useAppContext();
+  const { user, t } = useAppContext();
   const [restaurant, setRestaurant] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [isAdding, setIsAdding] = useState(false);
@@ -139,33 +139,33 @@ export default function MenuManager() {
   return (
     <>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-        <h1 className="section-title" style={{ color: '#f8fafc', margin: 0 }}>Menu Manager</h1>
+        <h1 className="section-title" style={{ color: '#f8fafc', margin: 0 }}>{t('menu_manager' as any) || 'Menu Manager'}</h1>
         <button className="btn-primary" onClick={isAdding ? handleCancelForm : () => setIsAdding(true)}>
-          {isAdding ? 'Cancel' : '+ Add New Dish'}
+          {isAdding ? (t('cancel' as any) || 'Cancel') : (t('add_dish' as any) || '+ Add New Dish')}
         </button>
       </div>
 
       {isAdding && (
         <form onSubmit={handleSubmit} style={{ background: 'rgba(255,255,255,0.05)', padding: '2rem', borderRadius: '1rem', marginBottom: '2rem', border: '1px solid rgba(255,255,255,0.1)' }}>
-          <h3 style={{ margin: '0 0 1rem 0' }}>{editingId ? 'Edit Dish' : 'Add New Dish'}</h3>
+          <h3 style={{ margin: '0 0 1rem 0' }}>{editingId ? (t('edit_dish' as any) || 'Edit Dish') : (t('add_dish' as any) || 'Add New Dish')}</h3>
           <div style={{ display: 'grid', gap: '1rem' }}>
-            <input type="text" placeholder="Dish Name" className="input-field" required value={name} onChange={e => setName(e.target.value)} />
-            <textarea placeholder="Description" className="input-field" required value={description} onChange={e => setDescription(e.target.value)} style={{ minHeight: '100px' }} />
-            <input type="number" placeholder="Price (ETB)" className="input-field" required value={price} onChange={e => setPrice(e.target.value)} />
+            <input type="text" placeholder={t('dish_name' as any) || 'Dish Name'} className="input-field" required value={name} onChange={e => setName(e.target.value)} />
+            <textarea placeholder={t('description' as any) || 'Description'} className="input-field" required value={description} onChange={e => setDescription(e.target.value)} style={{ minHeight: '100px' }} />
+            <input type="number" placeholder={t('price_etb' as any) || 'Price (ETB)'} className="input-field" required value={price} onChange={e => setPrice(e.target.value)} />
             <div>
               <p style={{ margin: '0 0 0.5rem 0', fontSize: '0.9rem', color: '#94a3b8' }}>
-                {editingId ? 'Upload new image (optional)' : 'Upload image (optional)'}
+                {editingId ? (t('upload_new_image' as any) || 'Upload new image (optional)') : (t('upload_image' as any) || 'Upload image (optional)')}
               </p>
               <input type="file" accept="image/*" className="input-field" onChange={e => setImage(e.target.files ? e.target.files[0] : null)} />
             </div>
-            <button type="submit" className="btn-primary">{editingId ? 'Save Changes' : 'Save Dish'}</button>
+            <button type="submit" className="btn-primary">{editingId ? (t('save_changes' as any) || 'Save Changes') : (t('save_dish' as any) || 'Save Dish')}</button>
           </div>
         </form>
       )}
 
       {restaurant?.menu_items?.length === 0 ? (
         <div style={{ textAlign: 'center', padding: '3rem', background: 'rgba(255, 255, 255, 0.03)', borderRadius: '1rem', border: '1px solid rgba(255, 255, 255, 0.1)' }}>
-          <p>No items in your menu yet.</p>
+          <p>{t('no_items_menu' as any) || 'No items in your menu yet.'}</p>
         </div>
       ) : (
         <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1.5rem' }}>
@@ -207,14 +207,14 @@ export default function MenuManager() {
                       fontWeight: 'bold' 
                     }}
                   >
-                    {(item.is_available === 1 || item.is_available === true) ? 'Mark Sold Out' : 'Mark Available'}
+                    {(item.is_available === 1 || item.is_available === true) ? (t('mark_sold_out' as any) || 'Mark Sold Out') : (t('mark_available' as any) || 'Mark Available')}
                   </button>
                   <div style={{ display: 'flex', gap: '0.5rem' }}>
                     <button onClick={() => handleEditClick(item)} style={{ padding: '0.5rem 1rem', background: 'rgba(255, 255, 255, 0.1)', color: 'white', border: 'none', borderRadius: '0.5rem', cursor: 'pointer', flex: 1, fontWeight: 'bold' }}>
-                      Edit
+                      {t('edit' as any) || 'Edit'}
                     </button>
                     <button onClick={() => handleDelete(item.id)} style={{ padding: '0.5rem 1rem', background: 'rgba(239, 68, 68, 0.2)', color: '#f87171', border: '1px solid rgba(239, 68, 68, 0.3)', borderRadius: '0.5rem', cursor: 'pointer', flex: 1, fontWeight: 'bold' }}>
-                      Delete
+                      {t('delete' as any) || 'Delete'}
                     </button>
                   </div>
                 </div>

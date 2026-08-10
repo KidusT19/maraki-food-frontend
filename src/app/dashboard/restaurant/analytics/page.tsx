@@ -5,7 +5,7 @@ import { useAppContext } from '@/context/AppContext';
 import { useRouter } from 'next/navigation';
 
 export default function AnalyticsDashboard() {
-  const { user } = useAppContext();
+  const { user, t } = useAppContext();
   const router = useRouter();
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -56,7 +56,7 @@ export default function AnalyticsDashboard() {
   return (
     <>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-        <h1 className="section-title" style={{ color: '#f8fafc', margin: 0 }}>Analytics Dashboard 📊</h1>
+        <h1 className="section-title" style={{ color: '#f8fafc', margin: 0 }}>{t('analytics_dashboard' as any) || 'Analytics Dashboard 📊'}</h1>
       </div>
 
       <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem', marginBottom: '3rem' }}>
@@ -69,7 +69,7 @@ export default function AnalyticsDashboard() {
           padding: '2rem',
           textAlign: 'center'
         }}>
-          <h3 style={{ margin: '0 0 0.5rem 0', color: '#cbd5e1', fontSize: '1.1rem' }}>Total Revenue</h3>
+          <h3 style={{ margin: '0 0 0.5rem 0', color: '#cbd5e1', fontSize: '1.1rem' }}>{t('total_revenue' as any) || 'Total Revenue'}</h3>
           <p style={{ margin: 0, fontSize: '2.5rem', fontWeight: 'bold', color: 'var(--primary)' }}>
             {data?.revenue.toFixed(2)} <span style={{ fontSize: '1.2rem', color: '#94a3b8' }}>ETB</span>
           </p>
@@ -84,7 +84,7 @@ export default function AnalyticsDashboard() {
           padding: '2rem',
           textAlign: 'center'
         }}>
-          <h3 style={{ margin: '0 0 0.5rem 0', color: '#cbd5e1', fontSize: '1.1rem' }}>Completed Orders</h3>
+          <h3 style={{ margin: '0 0 0.5rem 0', color: '#cbd5e1', fontSize: '1.1rem' }}>{t('completed_orders_stat' as any) || 'Completed Orders'}</h3>
           <p style={{ margin: 0, fontSize: '2.5rem', fontWeight: 'bold', color: '#fff' }}>
             {data?.total_orders}
           </p>
@@ -99,14 +99,14 @@ export default function AnalyticsDashboard() {
           padding: '2rem',
           textAlign: 'center'
         }}>
-          <h3 style={{ margin: '0 0 0.5rem 0', color: '#cbd5e1', fontSize: '1.1rem' }}>Active Orders</h3>
+          <h3 style={{ margin: '0 0 0.5rem 0', color: '#cbd5e1', fontSize: '1.1rem' }}>{t('active_orders_stat' as any) || 'Active Orders'}</h3>
           <p style={{ margin: 0, fontSize: '2.5rem', fontWeight: 'bold', color: '#3b82f6' }}>
             {data?.active_orders}
           </p>
         </div>
       </div>
 
-      <h2 style={{ fontSize: '1.5rem', marginBottom: '1.5rem', fontWeight: 600 }}>Most Popular Dishes</h2>
+      <h2 style={{ fontSize: '1.5rem', marginBottom: '1.5rem', fontWeight: 600 }}>{t('most_popular_dishes' as any) || 'Most Popular Dishes'}</h2>
       
       {data?.popular_dishes && data.popular_dishes.length > 0 ? (
         <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '1rem', padding: '2rem' }}>
@@ -118,7 +118,7 @@ export default function AnalyticsDashboard() {
               <div key={index} style={{ marginBottom: index === data.popular_dishes.length - 1 ? 0 : '1.5rem' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
                   <span style={{ fontWeight: 600, fontSize: '1.1rem' }}>{index + 1}. {dish.name}</span>
-                  <span style={{ color: '#cbd5e1' }}>{dish.total_sold} ordered</span>
+                  <span style={{ color: '#cbd5e1' }}>{dish.total_sold} {t('ordered' as any) || 'ordered'}</span>
                 </div>
                 <div style={{ width: '100%', height: '12px', background: 'rgba(255,255,255,0.1)', borderRadius: '1rem', overflow: 'hidden' }}>
                   <div style={{ 
@@ -135,7 +135,7 @@ export default function AnalyticsDashboard() {
         </div>
       ) : (
         <div style={{ textAlign: 'center', padding: '3rem', background: 'rgba(255, 255, 255, 0.03)', borderRadius: '1rem', border: '1px solid rgba(255, 255, 255, 0.1)' }}>
-          <p>Not enough data to determine popular dishes yet.</p>
+          <p>{t('not_enough_data' as any) || 'Not enough data to determine popular dishes yet.'}</p>
         </div>
       )}
     </>

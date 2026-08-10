@@ -6,7 +6,7 @@ import { useAppContext } from '@/context/AppContext';
 import Link from 'next/link';
 
 export default function RestaurantLayout({ children }: { children: React.ReactNode }) {
-  const { user } = useAppContext();
+  const { user, t } = useAppContext();
   const router = useRouter();
   const pathname = usePathname();
 
@@ -35,7 +35,7 @@ export default function RestaurantLayout({ children }: { children: React.ReactNo
             color: pathname === '/dashboard/restaurant' ? '#fff' : '#94a3b8',
             fontWeight: pathname === '/dashboard/restaurant' ? 600 : 400
           }}>
-            Live Order Feed
+            {t('live_order_feed' as any) || 'Live Order Feed'}
           </Link>
           <Link href="/dashboard/restaurant/menu" style={{ 
             padding: '0.5rem 1rem', 
@@ -45,7 +45,7 @@ export default function RestaurantLayout({ children }: { children: React.ReactNo
             color: pathname === '/dashboard/restaurant/menu' ? '#fff' : '#94a3b8',
             fontWeight: pathname === '/dashboard/restaurant/menu' ? 600 : 400
           }}>
-            Menu Manager
+            {t('menu_manager' as any) || 'Menu Manager'}
           </Link>
           <Link href="/dashboard/restaurant/analytics" style={{ 
             padding: '0.5rem 1rem', 
@@ -55,7 +55,7 @@ export default function RestaurantLayout({ children }: { children: React.ReactNo
             color: pathname === '/dashboard/restaurant/analytics' ? '#fff' : '#94a3b8',
             fontWeight: pathname === '/dashboard/restaurant/analytics' ? 600 : 400
           }}>
-            Analytics
+            {t('analytics' as any) || 'Analytics'}
           </Link>
           <Link href="/dashboard/restaurant/customers" style={{ 
             padding: '0.5rem 1rem', 
@@ -65,7 +65,7 @@ export default function RestaurantLayout({ children }: { children: React.ReactNo
             color: pathname === '/dashboard/restaurant/customers' ? '#fff' : '#94a3b8',
             fontWeight: pathname === '/dashboard/restaurant/customers' ? 600 : 400
           }}>
-            Customers
+            {t('customers' as any) || 'Customers'}
           </Link>
           <Link href="/dashboard/restaurant/settings" style={{ 
             padding: '0.5rem 1rem', 
@@ -75,7 +75,7 @@ export default function RestaurantLayout({ children }: { children: React.ReactNo
             color: pathname === '/dashboard/restaurant/settings' ? '#fff' : '#94a3b8',
             fontWeight: pathname === '/dashboard/restaurant/settings' ? 600 : 400
           }}>
-            Settings
+            {t('settings' as any) || 'Settings'}
           </Link>
           <Link href="/dashboard/restaurant/drivers" style={{ 
             padding: '0.5rem 1rem', 
@@ -85,7 +85,7 @@ export default function RestaurantLayout({ children }: { children: React.ReactNo
             color: pathname === '/dashboard/restaurant/drivers' ? '#fff' : '#94a3b8',
             fontWeight: pathname === '/dashboard/restaurant/drivers' ? 600 : 400
           }}>
-            Drivers
+            {t('drivers' as any) || 'Drivers'}
           </Link>
         </div>
 

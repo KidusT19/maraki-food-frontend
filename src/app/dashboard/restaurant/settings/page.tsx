@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useAppContext } from '@/context/AppContext';
 
 export default function RestaurantSettings() {
-  const { user, setUser } = useAppContext();
+  const { user, setUser, t } = useAppContext();
   const [newName, setNewName] = useState('');
   const [newEmail, setNewEmail] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -65,16 +65,16 @@ export default function RestaurantSettings() {
   return (
     <>
       <div style={{ marginBottom: '2rem' }}>
-        <h1 className="section-title" style={{ color: '#f8fafc', margin: 0 }}>Settings</h1>
-        <p style={{ color: '#94a3b8', marginTop: '0.5rem' }}>Manage your account security.</p>
+        <h1 className="section-title" style={{ color: '#f8fafc', margin: 0 }}>{t('settings' as any) || 'Settings'}</h1>
+        <p style={{ color: '#94a3b8', marginTop: '0.5rem' }}>{t('settings_desc' as any) || 'Manage your account security.'}</p>
       </div>
 
       <div style={{ maxWidth: '500px', background: 'rgba(255,255,255,0.05)', padding: '2rem', borderRadius: '1rem', border: '1px solid rgba(255,255,255,0.1)' }}>
-        <h3 style={{ margin: '0 0 1.5rem 0' }}>Update Profile</h3>
+        <h3 style={{ margin: '0 0 1.5rem 0' }}>{t('update_profile' as any) || 'Update Profile'}</h3>
         
         <form onSubmit={handleSubmit} style={{ display: 'grid', gap: '1rem' }}>
           <div>
-            <label style={{ display: 'block', marginBottom: '0.5rem', color: '#cbd5e1', fontSize: '0.9rem' }}>Account Name</label>
+            <label style={{ display: 'block', marginBottom: '0.5rem', color: '#cbd5e1', fontSize: '0.9rem' }}>{t('account_name' as any) || 'Account Name'}</label>
             <input 
               type="text" 
               className="input-field" 
@@ -85,7 +85,7 @@ export default function RestaurantSettings() {
           </div>
 
           <div>
-            <label style={{ display: 'block', marginBottom: '0.5rem', color: '#cbd5e1', fontSize: '0.9rem' }}>Email Address</label>
+            <label style={{ display: 'block', marginBottom: '0.5rem', color: '#cbd5e1', fontSize: '0.9rem' }}>{t('email_address' as any) || 'Email Address'}</label>
             <input 
               type="email" 
               className="input-field" 
@@ -98,7 +98,7 @@ export default function RestaurantSettings() {
           <div style={{ margin: '1rem 0', borderBottom: '1px solid rgba(255,255,255,0.1)' }}></div>
 
           <div>
-            <label style={{ display: 'block', marginBottom: '0.5rem', color: '#cbd5e1', fontSize: '0.9rem' }}>New Password (Optional)</label>
+            <label style={{ display: 'block', marginBottom: '0.5rem', color: '#cbd5e1', fontSize: '0.9rem' }}>{t('new_password' as any) || 'New Password (Optional)'}</label>
             <input 
               type="password" 
               className="input-field" 
@@ -109,7 +109,7 @@ export default function RestaurantSettings() {
           </div>
           
           <div>
-            <label style={{ display: 'block', marginBottom: '0.5rem', color: '#cbd5e1', fontSize: '0.9rem' }}>Confirm New Password</label>
+            <label style={{ display: 'block', marginBottom: '0.5rem', color: '#cbd5e1', fontSize: '0.9rem' }}>{t('confirm_new_password' as any) || 'Confirm New Password'}</label>
             <input 
               type="password" 
               className="input-field" 
@@ -120,7 +120,7 @@ export default function RestaurantSettings() {
           </div>
           
           <button type="submit" className="btn-primary" disabled={loading} style={{ marginTop: '1rem' }}>
-            {loading ? 'Updating...' : 'Save Changes'}
+            {loading ? (t('updating' as any) || 'Updating...') : (t('save_changes' as any) || 'Save Changes')}
           </button>
         </form>
       </div>
