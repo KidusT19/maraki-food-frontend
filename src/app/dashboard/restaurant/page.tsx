@@ -140,7 +140,7 @@ export default function RestaurantDashboard() {
                         <p style={{ margin: '0 0 0.25rem 0', fontSize: '0.85rem', color: '#94a3b8' }}>ID: <span style={{ color: '#fff' }}>{order.transaction_id}</span></p>
                       )}
                       {order.receipt_screenshot && (
-                        <a href={`https://maraki-food-backend.onrender.com/uploads/${order.receipt_screenshot}`} target="_blank" rel="noreferrer" style={{ fontSize: '0.85rem', color: 'var(--primary)', textDecoration: 'underline' }}>
+                        <a href={order.receipt_screenshot.startsWith('http') ? order.receipt_screenshot : `https://maraki-food-backend.onrender.com/uploads/${order.receipt_screenshot}`} target="_blank" rel="noreferrer" style={{ fontSize: '0.85rem', color: 'var(--primary)', textDecoration: 'underline' }}>
                           📄 {t('view_screenshot')}
                         </a>
                       )}

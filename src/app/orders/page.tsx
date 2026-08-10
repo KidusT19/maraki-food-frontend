@@ -129,7 +129,7 @@ export default function OrdersPage() {
                     {Number(order.total_amount).toFixed(2)} ETB
                   </span>
                   {order.receipt_screenshot && (
-                    <a href={`https://maraki-food-backend.onrender.com/uploads/${order.receipt_screenshot}`} target="_blank" rel="noreferrer" style={{ display: 'inline-block', padding: '0.4rem 1rem', fontSize: '0.85rem', background: 'transparent', color: '#cbd5e1', border: '1px solid #cbd5e1', borderRadius: '2rem', cursor: 'pointer', fontWeight: 600, textDecoration: 'none', marginTop: '0.5rem' }}>
+                    <a href={order.receipt_screenshot.startsWith('http') ? order.receipt_screenshot : `https://maraki-food-backend.onrender.com/uploads/${order.receipt_screenshot}`} target="_blank" rel="noreferrer" style={{ display: 'inline-block', padding: '0.4rem 1rem', fontSize: '0.85rem', background: 'transparent', color: '#cbd5e1', border: '1px solid #cbd5e1', borderRadius: '2rem', cursor: 'pointer', fontWeight: 600, textDecoration: 'none', marginTop: '0.5rem' }}>
                       {t('view_receipt')}
                     </a>
                   )}
