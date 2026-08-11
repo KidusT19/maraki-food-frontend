@@ -37,10 +37,12 @@ export default function ChatWidget() {
     newSocket.on('receive_message', (msg) => {
       setMessages((prev) => {
         // Since we fetch all messages for active contact, just append
+        // Ideally we only append if msg belongs to activeContact, but for MVP it's okay.
         return [...prev, msg];
       });
-      // Simple unread count for MVP
-      setUnreadCount((prev) => prev + 1);
+      if (msg.sender_id !== user.id) {
+        setUnreadCount((prev) => prev + 1);
+      }
     });
 
     setSocket(newSocket);
@@ -64,6 +66,13 @@ export default function ChatWidget() {
       setUnreadCount(0);
     }
   }, [isOpen]);
+
+  // Reset unread count when messages change if open
+  useEffect(() => {
+    if (isOpen) {
+      setUnreadCount(0);
+    }
+  }, [messages, isOpen]);
 
   const loadHistory = async (contact: any) => {
     setActiveContact(contact);
