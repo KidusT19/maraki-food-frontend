@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAppContext } from '@/context/AppContext';
+import ChatWidget from '@/components/ChatWidget';
 
 export default function DriverDashboard() {
   const { user, t } = useAppContext();
@@ -250,6 +251,7 @@ export default function DriverDashboard() {
           </div>
         )}
       </div>
+      <ChatWidget />
     </main>
   );
 }
