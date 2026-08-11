@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAppContext } from '@/context/AppContext';
 import Link from 'next/link';
+import { getEthiopianTimeInfo } from '@/utils/timeCheck';
 
 export default function CheckoutPage() {
   const { user, cart, cartTotal, clearCart, t } = useAppContext();
@@ -36,6 +37,13 @@ export default function CheckoutPage() {
 
   const handlePayment = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const timeInfo = getEthiopianTimeInfo();
+    if (!timeInfo.isActive) {
+      alert(`Sorry, orders are closed right now. ${timeInfo.message}`);
+      return;
+    }
+
     setIsProcessing(true);
 
     // 1. Simulate Payment Processing Delay (2.5 seconds)

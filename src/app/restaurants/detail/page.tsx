@@ -2,6 +2,7 @@
 import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAppContext } from '@/context/AppContext';
+import { getEthiopianTimeInfo, formatEATtoLT } from '@/utils/timeCheck';
 
 function RestaurantDetailContent() {
   const searchParams = useSearchParams();
@@ -13,6 +14,15 @@ function RestaurantDetailContent() {
   
   // Use global context instead of local state
   const { cart, addToCart, removeFromCart, updateQuantity, clearCart, cartTotal, user, t } = useAppContext();
+  
+  const [timeInfo, setTimeInfo] = useState<ReturnType<typeof getEthiopianTimeInfo> | null>(null);
+
+  useEffect(() => {
+    setTimeInfo(getEthiopianTimeInfo());
+    // Update time every minute
+    const interval = setInterval(() => setTimeInfo(getEthiopianTimeInfo()), 60000);
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     if (!id) return;
@@ -69,6 +79,22 @@ function RestaurantDetailContent() {
         </div>
       </div>
       
+      {timeInfo && (
+        <div style={{ 
+          background: timeInfo.isActive ? 'rgba(34, 197, 94, 0.1)' : 'rgba(239, 68, 68, 0.1)', 
+          padding: '1rem', 
+          textAlign: 'center', 
+          borderBottom: `1px solid ${timeInfo.isActive ? 'rgba(34, 197, 94, 0.2)' : 'rgba(239, 68, 68, 0.2)'}`
+        }}>
+          <p style={{ margin: 0, fontWeight: 600, color: timeInfo.isActive ? '#4ade80' : '#f87171' }}>
+            {timeInfo.isActive 
+              ? `Currently taking ${timeInfo.activeMeal} orders (${formatEATtoLT(timeInfo.currentEATHour, timeInfo.currentEATMinute)})`
+              : `Closed for orders right now. ${timeInfo.message}`
+            }
+          </p>
+        </div>
+      )}
+
       <div className="container" style={{ paddingTop: '3rem' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
           <h2 style={{ fontSize: '1.5rem', fontWeight: 600, margin: 0 }}>{t('menu')}</h2>
@@ -115,7 +141,7 @@ function RestaurantDetailContent() {
                     cursor: (item.is_available === 0 || item.is_available === false) ? 'not-allowed' : 'pointer'
                   }} 
                   onClick={() => {
-                    if (item.is_available === 0 || item.is_available === false) return;
+                    if (item.is_available === 0 || item.is_available === false || (timeInfo && !timeInfo.isActive)) return;
                     if (!user) {
                       alert("Please log in to start ordering food.");
                       router.push('/login');
@@ -123,9 +149,9 @@ function RestaurantDetailContent() {
                     }
                     addToCart({ ...item, quantity: 1, restaurant_id: restaurant.id })
                   }}
-                  disabled={item.is_available === 0 || item.is_available === false}
+                  disabled={item.is_available === 0 || item.is_available === false || (timeInfo ? !timeInfo.isActive : false)}
                 >
-                  {(item.is_available === 0 || item.is_available === false) ? t('unavailable') : t('add_to_order')}
+                  {(item.is_available === 0 || item.is_available === false) ? t('unavailable') : (timeInfo && !timeInfo.isActive ? 'Closed' : t('add_to_order'))}
                 </button>
               </div>
             </div>
