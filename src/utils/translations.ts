@@ -12,6 +12,7 @@ export const translations = {
     hero_subtitle: "Experience the best local restaurants delivered hot and fresh to your door in under 30 minutes. Premium quality, zero compromise.",
     btn_order_now: "Order Now",
     btn_view_menu: "View Menu",
+    search: "Search",
 
     // Homepage Cards
     feature1_title: "Fast Delivery",
@@ -211,6 +212,7 @@ export const translations = {
     hero_subtitle: "ምርጥ የሀገር ውስጥ ምግብ ቤቶችን በ30 ደቂቃ ውስጥ ትኩስ ሆኖ እስከ ደጃፍዎ እናደርሳለን።",
     btn_order_now: "አሁኑኑ ይዘዙ",
     btn_view_menu: "ምናሌ ይመልከቱ",
+    search: "ፈልግ",
 
     // Homepage Cards
     feature1_title: "ፈጣን አቅርቦት",

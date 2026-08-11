@@ -10,6 +10,7 @@ export default function DriverDashboard() {
   const [orders, setOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<'available' | 'mine'>('available');
+  const [searchQuery, setSearchQuery] = useState('');
 
   // Authenticate role
   useEffect(() => {
@@ -90,14 +91,47 @@ export default function DriverDashboard() {
   const availableOrders = orders.filter(o => o.driver_id === null);
   const myOrders = orders.filter(o => o.driver_id === user.id);
   
-  const displayOrders = activeTab === 'available' ? availableOrders : myOrders;
+  let displayOrders = activeTab === 'available' ? availableOrders : myOrders;
+
+  if (searchQuery) {
+    const q = searchQuery.toLowerCase();
+    displayOrders = displayOrders.filter(o => 
+      o.restaurant_name?.toLowerCase().includes(q) ||
+      o.customer_name?.toLowerCase().includes(q) ||
+      o.delivery_address?.toLowerCase().includes(q) ||
+      o.id.toString().includes(q)
+    );
+  }
 
   return (
     <main className="section" style={{ paddingTop: '8rem', minHeight: '100vh', background: 'radial-gradient(circle at top left, #064e3b, #0f172a 50%, #020617 100%)', color: '#f8fafc' }}>
       <div className="container">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
           <h1 className="section-title" style={{ color: '#f8fafc', margin: 0 }}>{t('driver_portal')}</h1>
-          <span style={{ padding: '0.5rem 1rem', background: 'rgba(255,255,255,0.1)', borderRadius: '2rem', fontSize: '0.9rem' }}>{t('searching_deliveries')} 🛵</span>
+          <div style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            <div style={{ position: 'relative' }}>
+              <input 
+                type="text" 
+                placeholder={t('search') + "..."}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                style={{
+                  padding: '0.5rem 1rem 0.5rem 2.25rem',
+                  background: 'rgba(255,255,255,0.1)',
+                  border: '1px solid rgba(255,255,255,0.2)',
+                  borderRadius: '2rem',
+                  color: '#fff',
+                  outline: 'none',
+                  width: '200px',
+                  fontSize: '0.9rem'
+                }}
+              />
+              <span style={{ position: 'absolute', left: '0.75rem', top: '50%', transform: 'translateY(-50%)', opacity: 0.5 }}>
+                🔍
+              </span>
+            </div>
+            <span style={{ padding: '0.5rem 1rem', background: 'rgba(255,255,255,0.1)', borderRadius: '2rem', fontSize: '0.9rem' }}>{t('searching_deliveries')} 🛵</span>
+          </div>
         </div>
 
         <div style={{ display: 'flex', gap: '1rem', marginBottom: '2rem' }}>
