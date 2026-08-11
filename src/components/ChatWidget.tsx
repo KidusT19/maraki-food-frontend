@@ -40,7 +40,7 @@ export default function ChatWidget() {
         // Ideally we only append if msg belongs to activeContact, but for MVP it's okay.
         return [...prev, msg];
       });
-      if (msg.sender_id !== user.id) {
+      if (String(msg.sender_id) !== String(user.id)) {
         setUnreadCount((prev) => prev + 1);
       }
     });
@@ -55,24 +55,40 @@ export default function ChatWidget() {
       .then(data => setContacts(data || []))
       .catch(console.error);
 
+    // Fetch initial unread count
+    fetchUnreadCount(token);
+
     return () => {
       newSocket.disconnect();
     };
   }, [user]);
 
-  // Reset unread count when opening
+  const fetchUnreadCount = async (token: string) => {
+    try {
+      const res = await fetch('https://maraki-food-backend.onrender.com/api/chat/unread', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      const data = await res.json();
+      if (data && typeof data.unread === 'number') {
+        setUnreadCount(data.unread);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  // We don't reset unread count to 0 completely, just rely on fetching
+  // But for immediate feedback if they close without opening a chat
   useEffect(() => {
     if (isOpen) {
-      setUnreadCount(0);
+      // It's possible we shouldn't reset it until they select a contact, 
+      // but if we do, the badge disappears immediately upon opening
+      // Let's leave it as is, and it will re-fetch accurately when they click a contact.
     }
   }, [isOpen]);
 
-  // Reset unread count when messages change if open
-  useEffect(() => {
-    if (isOpen) {
-      setUnreadCount(0);
-    }
-  }, [messages, isOpen]);
+  // We can remove the old useEffects that blindly set unreadCount to 0
+
 
   const loadHistory = async (contact: any) => {
     setActiveContact(contact);
@@ -83,6 +99,9 @@ export default function ChatWidget() {
       });
       const data = await res.json();
       setMessages(data || []);
+      
+      // Update unread count after history is fetched (which marks them as read)
+      if (token) fetchUnreadCount(token);
     } catch (err) {
       console.error(err);
     }
