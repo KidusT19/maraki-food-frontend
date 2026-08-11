@@ -56,7 +56,9 @@ export default function ChatWidget() {
       .catch(console.error);
 
     // Fetch initial unread count
-    fetchUnreadCount(token);
+    if (token) {
+      fetchUnreadCount(token);
+    }
 
     return () => {
       newSocket.disconnect();

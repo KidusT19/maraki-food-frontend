@@ -10,8 +10,9 @@ export default function DriverDashboard() {
   const router = useRouter();
   const [orders, setOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'available' | 'mine'>('available');
+  const [activeTab, setActiveTab] = useState<'available' | 'mine' | 'earnings'>('available');
   const [searchQuery, setSearchQuery] = useState('');
+  const [earningsData, setEarningsData] = useState<any>(null);
 
   // Authenticate role
   useEffect(() => {
@@ -40,6 +41,14 @@ export default function DriverDashboard() {
         console.error(err);
         setLoading(false);
       });
+
+    // Also fetch earnings
+    fetch('https://maraki-food-backend.onrender.com/api/orders/driver/earnings', {
+      headers: { 'Authorization': `Bearer ${token}` }
+    })
+      .then(res => res.json())
+      .then(data => setEarningsData(data))
+      .catch(console.error);
   };
 
   useEffect(() => {
@@ -135,34 +144,93 @@ export default function DriverDashboard() {
           </div>
         </div>
 
-        <div style={{ display: 'flex', gap: '1rem', marginBottom: '2rem' }}>
-          <button 
-            onClick={() => setActiveTab('available')}
-            style={{ 
-              padding: '0.75rem 1.5rem', 
-              borderRadius: '2rem', 
-              background: activeTab === 'available' ? 'var(--primary)' : 'rgba(255,255,255,0.05)',
-              color: activeTab === 'available' ? '#fff' : '#cbd5e1',
-              border: 'none',
-              cursor: 'pointer',
-              fontWeight: 600
-            }}>
-            {t('available_orders')} ({availableOrders.length})
-          </button>
-          <button 
-            onClick={() => setActiveTab('mine')}
-            style={{ 
-              padding: '0.75rem 1.5rem', 
-              borderRadius: '2rem', 
-              background: activeTab === 'mine' ? 'var(--primary)' : 'rgba(255,255,255,0.05)',
-              color: activeTab === 'mine' ? '#fff' : '#cbd5e1',
-              border: 'none',
-              cursor: 'pointer',
-              fontWeight: 600
-            }}>
-            {t('my_deliveries')} ({myOrders.length})
-          </button>
-        </div>
+      {/* Tab Navigation */}
+      <div className="flex justify-center mb-8 gap-4">
+        <button 
+          onClick={() => setActiveTab('available')}
+          className={`px-8 py-3 rounded-xl font-bold transition-all ${
+            activeTab === 'available' 
+              ? 'bg-primary text-white shadow-lg shadow-primary/30' 
+              : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+          }`}
+        >
+          {t('available_orders')}
+        </button>
+        <button 
+          onClick={() => setActiveTab('mine')}
+          className={`px-8 py-3 rounded-xl font-bold transition-all ${
+            activeTab === 'mine' 
+              ? 'bg-primary text-white shadow-lg shadow-primary/30' 
+              : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+          }`}
+        >
+          {t('my_deliveries')}
+        </button>
+        <button 
+          onClick={() => setActiveTab('earnings')}
+          className={`px-8 py-3 rounded-xl font-bold transition-all ${
+            activeTab === 'earnings' 
+              ? 'bg-green-600 text-white shadow-lg shadow-green-600/30' 
+              : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+          }`}
+        >
+          Earnings
+        </button>
+      </div>
+
+      <div className="max-w-4xl mx-auto">
+        {activeTab === 'earnings' ? (
+          <div className="space-y-8 animate-fade-in">
+            {/* Stats Row */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="bg-slate-800/80 backdrop-blur-md p-6 rounded-2xl border border-slate-700">
+                <p className="text-slate-400 font-medium">Today's Earnings</p>
+                <h3 className="text-4xl font-bold text-green-400 mt-2">
+                  {earningsData?.todayEarnings?.toFixed(2) || '0.00'} <span className="text-lg text-slate-500">ETB</span>
+                </h3>
+              </div>
+              <div className="bg-slate-800/80 backdrop-blur-md p-6 rounded-2xl border border-slate-700">
+                <p className="text-slate-400 font-medium">This Week</p>
+                <h3 className="text-4xl font-bold text-emerald-400 mt-2">
+                  {earningsData?.weeklyEarnings?.toFixed(2) || '0.00'} <span className="text-lg text-slate-500">ETB</span>
+                </h3>
+              </div>
+              <div className="bg-slate-800/80 backdrop-blur-md p-6 rounded-2xl border border-slate-700">
+                <p className="text-slate-400 font-medium">Total Lifetime</p>
+                <h3 className="text-4xl font-bold text-white mt-2">
+                  {earningsData?.totalEarnings?.toFixed(2) || '0.00'} <span className="text-lg text-slate-500">ETB</span>
+                </h3>
+                <p className="text-sm text-slate-400 mt-2">{earningsData?.totalDeliveries || 0} deliveries completed</p>
+              </div>
+            </div>
+
+            {/* Ledger */}
+            <div className="bg-slate-800/80 backdrop-blur-md p-6 rounded-2xl border border-slate-700">
+              <h3 className="text-xl font-bold text-white mb-6">Recent Deliveries</h3>
+              {(!earningsData?.recentDeliveries || earningsData.recentDeliveries.length === 0) ? (
+                <div className="text-center py-10 text-slate-400">
+                  You haven't completed any deliveries yet.
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {earningsData.recentDeliveries.map((delivery: any) => (
+                    <div key={delivery.id} className="flex justify-between items-center p-4 bg-slate-900/50 rounded-xl border border-slate-700/50">
+                      <div>
+                        <p className="text-white font-medium">Order #{delivery.id}</p>
+                        <p className="text-sm text-slate-400">{new Date(delivery.created_at).toLocaleString()}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-lg font-bold text-green-400">+50.00 ETB</p>
+                        <p className="text-sm text-slate-500">Delivery Fee</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        ) : (
+          <div className="space-y-6">
 
         {loading ? (
           <p style={{ textAlign: 'center' }}>{t('loading_deliveries')}</p>
@@ -250,6 +318,9 @@ export default function DriverDashboard() {
             ))}
           </div>
         )}
+          </div>
+        )}
+      </div>
       </div>
       <ChatWidget />
     </main>
