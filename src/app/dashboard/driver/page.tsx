@@ -145,83 +145,101 @@ export default function DriverDashboard() {
         </div>
 
       {/* Tab Navigation */}
-      <div className="flex justify-center mb-8 gap-4">
+      <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginBottom: '2rem', flexWrap: 'wrap' }}>
         <button 
           onClick={() => setActiveTab('available')}
-          className={`px-8 py-3 rounded-xl font-bold transition-all ${
-            activeTab === 'available' 
-              ? 'bg-primary text-white shadow-lg shadow-primary/30' 
-              : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
-          }`}
+          style={{
+            padding: '0.75rem 2rem',
+            borderRadius: '1rem',
+            fontWeight: 'bold',
+            transition: 'all 0.3s ease',
+            border: 'none',
+            cursor: 'pointer',
+            background: activeTab === 'available' ? 'var(--primary)' : 'rgba(255,255,255,0.05)',
+            color: activeTab === 'available' ? '#fff' : '#cbd5e1',
+            boxShadow: activeTab === 'available' ? '0 4px 12px rgba(249, 115, 22, 0.3)' : 'none'
+          }}
         >
           {t('available_orders')}
         </button>
         <button 
           onClick={() => setActiveTab('mine')}
-          className={`px-8 py-3 rounded-xl font-bold transition-all ${
-            activeTab === 'mine' 
-              ? 'bg-primary text-white shadow-lg shadow-primary/30' 
-              : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
-          }`}
+          style={{
+            padding: '0.75rem 2rem',
+            borderRadius: '1rem',
+            fontWeight: 'bold',
+            transition: 'all 0.3s ease',
+            border: 'none',
+            cursor: 'pointer',
+            background: activeTab === 'mine' ? 'var(--primary)' : 'rgba(255,255,255,0.05)',
+            color: activeTab === 'mine' ? '#fff' : '#cbd5e1',
+            boxShadow: activeTab === 'mine' ? '0 4px 12px rgba(249, 115, 22, 0.3)' : 'none'
+          }}
         >
           {t('my_deliveries')}
         </button>
         <button 
           onClick={() => setActiveTab('earnings')}
-          className={`px-8 py-3 rounded-xl font-bold transition-all ${
-            activeTab === 'earnings' 
-              ? 'bg-green-600 text-white shadow-lg shadow-green-600/30' 
-              : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
-          }`}
+          style={{
+            padding: '0.75rem 2rem',
+            borderRadius: '1rem',
+            fontWeight: 'bold',
+            transition: 'all 0.3s ease',
+            border: 'none',
+            cursor: 'pointer',
+            background: activeTab === 'earnings' ? '#10b981' : 'rgba(255,255,255,0.05)',
+            color: activeTab === 'earnings' ? '#fff' : '#cbd5e1',
+            boxShadow: activeTab === 'earnings' ? '0 4px 12px rgba(16, 185, 129, 0.3)' : 'none'
+          }}
         >
           Earnings
         </button>
       </div>
 
-      <div className="max-w-4xl mx-auto">
+      <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
         {activeTab === 'earnings' ? (
-          <div className="space-y-8 animate-fade-in">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem', animation: 'fadeInUp 0.5s ease forwards' }}>
             {/* Stats Row */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="bg-slate-800/80 backdrop-blur-md p-6 rounded-2xl border border-slate-700">
-                <p className="text-slate-400 font-medium">Today's Earnings</p>
-                <h3 className="text-4xl font-bold text-green-400 mt-2">
-                  {earningsData?.todayEarnings?.toFixed(2) || '0.00'} <span className="text-lg text-slate-500">ETB</span>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.5rem' }}>
+              <div style={{ background: 'rgba(255,255,255,0.04)', backdropFilter: 'blur(12px)', padding: '1.5rem', borderRadius: '1rem', border: '1px solid rgba(255,255,255,0.1)' }}>
+                <p style={{ color: '#94a3b8', fontWeight: 500, margin: '0 0 0.5rem 0' }}>Today's Earnings</p>
+                <h3 style={{ fontSize: '2.5rem', fontWeight: 'bold', color: '#4ade80', margin: 0 }}>
+                  {earningsData?.todayEarnings?.toFixed(2) || '0.00'} <span style={{ fontSize: '1.25rem', color: '#64748b' }}>ETB</span>
                 </h3>
               </div>
-              <div className="bg-slate-800/80 backdrop-blur-md p-6 rounded-2xl border border-slate-700">
-                <p className="text-slate-400 font-medium">This Week</p>
-                <h3 className="text-4xl font-bold text-emerald-400 mt-2">
-                  {earningsData?.weeklyEarnings?.toFixed(2) || '0.00'} <span className="text-lg text-slate-500">ETB</span>
+              <div style={{ background: 'rgba(255,255,255,0.04)', backdropFilter: 'blur(12px)', padding: '1.5rem', borderRadius: '1rem', border: '1px solid rgba(255,255,255,0.1)' }}>
+                <p style={{ color: '#94a3b8', fontWeight: 500, margin: '0 0 0.5rem 0' }}>This Week</p>
+                <h3 style={{ fontSize: '2.5rem', fontWeight: 'bold', color: '#34d399', margin: 0 }}>
+                  {earningsData?.weeklyEarnings?.toFixed(2) || '0.00'} <span style={{ fontSize: '1.25rem', color: '#64748b' }}>ETB</span>
                 </h3>
               </div>
-              <div className="bg-slate-800/80 backdrop-blur-md p-6 rounded-2xl border border-slate-700">
-                <p className="text-slate-400 font-medium">Total Lifetime</p>
-                <h3 className="text-4xl font-bold text-white mt-2">
-                  {earningsData?.totalEarnings?.toFixed(2) || '0.00'} <span className="text-lg text-slate-500">ETB</span>
+              <div style={{ background: 'rgba(255,255,255,0.04)', backdropFilter: 'blur(12px)', padding: '1.5rem', borderRadius: '1rem', border: '1px solid rgba(255,255,255,0.1)' }}>
+                <p style={{ color: '#94a3b8', fontWeight: 500, margin: '0 0 0.5rem 0' }}>Total Lifetime</p>
+                <h3 style={{ fontSize: '2.5rem', fontWeight: 'bold', color: '#fff', margin: 0 }}>
+                  {earningsData?.totalEarnings?.toFixed(2) || '0.00'} <span style={{ fontSize: '1.25rem', color: '#64748b' }}>ETB</span>
                 </h3>
-                <p className="text-sm text-slate-400 mt-2">{earningsData?.totalDeliveries || 0} deliveries completed</p>
+                <p style={{ fontSize: '0.875rem', color: '#94a3b8', marginTop: '0.5rem', marginBottom: 0 }}>{earningsData?.totalDeliveries || 0} deliveries completed</p>
               </div>
             </div>
 
             {/* Ledger */}
-            <div className="bg-slate-800/80 backdrop-blur-md p-6 rounded-2xl border border-slate-700">
-              <h3 className="text-xl font-bold text-white mb-6">Recent Deliveries</h3>
+            <div style={{ background: 'rgba(255,255,255,0.04)', backdropFilter: 'blur(12px)', padding: '1.5rem', borderRadius: '1rem', border: '1px solid rgba(255,255,255,0.1)' }}>
+              <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#fff', marginBottom: '1.5rem', marginTop: 0 }}>Recent Deliveries</h3>
               {(!earningsData?.recentDeliveries || earningsData.recentDeliveries.length === 0) ? (
-                <div className="text-center py-10 text-slate-400">
+                <div style={{ textAlign: 'center', padding: '3rem 0', color: '#94a3b8' }}>
                   You haven't completed any deliveries yet.
                 </div>
               ) : (
-                <div className="space-y-4">
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                   {earningsData.recentDeliveries.map((delivery: any) => (
-                    <div key={delivery.id} className="flex justify-between items-center p-4 bg-slate-900/50 rounded-xl border border-slate-700/50">
+                    <div key={delivery.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem', background: 'rgba(0,0,0,0.2)', borderRadius: '0.75rem', border: '1px solid rgba(255,255,255,0.05)' }}>
                       <div>
-                        <p className="text-white font-medium">Order #{delivery.id}</p>
-                        <p className="text-sm text-slate-400">{new Date(delivery.created_at).toLocaleString()}</p>
+                        <p style={{ color: '#fff', fontWeight: 500, margin: '0 0 0.25rem 0' }}>Order #{delivery.id}</p>
+                        <p style={{ fontSize: '0.875rem', color: '#94a3b8', margin: 0 }}>{new Date(delivery.created_at).toLocaleString()}</p>
                       </div>
-                      <div className="text-right">
-                        <p className="text-lg font-bold text-green-400">+50.00 ETB</p>
-                        <p className="text-sm text-slate-500">Delivery Fee</p>
+                      <div style={{ textAlign: 'right' }}>
+                        <p style={{ fontSize: '1.125rem', fontWeight: 'bold', color: '#4ade80', margin: '0 0 0.25rem 0' }}>+50.00 ETB</p>
+                        <p style={{ fontSize: '0.875rem', color: '#64748b', margin: 0 }}>Delivery Fee</p>
                       </div>
                     </div>
                   ))}
@@ -230,7 +248,7 @@ export default function DriverDashboard() {
             </div>
           </div>
         ) : (
-          <div className="space-y-6">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
 
         {loading ? (
           <p style={{ textAlign: 'center' }}>{t('loading_deliveries')}</p>
