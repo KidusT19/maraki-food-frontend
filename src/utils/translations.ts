@@ -149,6 +149,13 @@ export const translations = {
     mark_picked_up: "Mark as Picked Up",
     mark_delivered: "Mark as Delivered",
     
+    // Order Statuses
+    pending: "Pending",
+    preparing: "Preparing",
+    ready: "Ready",
+    on_the_way: "On The Way",
+    delivered: "Delivered",
+    
     // Restaurant Dashboard Tabs & Sections
     analytics: "Analytics",
     customers: "Customers",
@@ -348,6 +355,13 @@ export const translations = {
     accept_delivery: "ትዕዛዙን ተቀበል (ለማድረስ)",
     mark_picked_up: "ተረክቤያለሁ",
     mark_delivered: "አድርሻለሁ",
+    
+    // Order Statuses
+    pending: "በመጠባበቅ ላይ",
+    preparing: "በመዘጋጀት ላይ",
+    ready: "ዝግጁ",
+    on_the_way: "በመንገድ ላይ",
+    delivered: "ደርሷል",
     
     // Restaurant Dashboard Tabs & Sections
     analytics: "ትንታኔ (Analytics)",

@@ -170,7 +170,14 @@ export default function Navbar() {
               <Link href="/orders" style={{ color: '#f8fafc', textDecoration: 'none', fontWeight: 600, fontSize: '1.1rem' }} onClick={closeMenu}>{t('my_orders')}</Link>
             )}
             {user.role === 'restaurant' && (
-              <Link href="/dashboard/restaurant" style={{ color: 'var(--primary)', textDecoration: 'none', fontWeight: 600, fontSize: '1.1rem' }} onClick={closeMenu}>{t('nav_dashboard')}</Link>
+              <>
+                <Link href="/dashboard/restaurant" style={{ color: 'var(--primary)', textDecoration: 'none', fontWeight: 600, fontSize: '1.1rem' }} onClick={closeMenu}>{t('live_order_feed' as any) || 'Live Orders'}</Link>
+                <Link href="/dashboard/restaurant/menu" style={{ color: '#f8fafc', textDecoration: 'none', fontWeight: 600, fontSize: '1.1rem' }} onClick={closeMenu}>{t('menu_manager' as any) || 'Menu Manager'}</Link>
+                <Link href="/dashboard/restaurant/analytics" style={{ color: '#f8fafc', textDecoration: 'none', fontWeight: 600, fontSize: '1.1rem' }} onClick={closeMenu}>{t('analytics' as any) || 'Analytics'}</Link>
+                <Link href="/dashboard/restaurant/customers" style={{ color: '#f8fafc', textDecoration: 'none', fontWeight: 600, fontSize: '1.1rem' }} onClick={closeMenu}>{t('customers' as any) || 'Customers'}</Link>
+                <Link href="/dashboard/restaurant/drivers" style={{ color: '#f8fafc', textDecoration: 'none', fontWeight: 600, fontSize: '1.1rem' }} onClick={closeMenu}>{t('drivers' as any) || 'Drivers'}</Link>
+                <Link href="/dashboard/restaurant/settings" style={{ color: '#f8fafc', textDecoration: 'none', fontWeight: 600, fontSize: '1.1rem' }} onClick={closeMenu}>{t('settings' as any) || 'Settings'}</Link>
+              </>
             )}
             {user.role === 'driver' && (
               <Link href="/dashboard/driver" style={{ color: 'var(--primary)', textDecoration: 'none', fontWeight: 600, fontSize: '1.1rem' }} onClick={closeMenu}>{t('nav_dashboard')}</Link>

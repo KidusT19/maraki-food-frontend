@@ -131,7 +131,7 @@ export default function RestaurantDashboard() {
                            order.status === 'on_the_way' ? '#c084fc' : 
                            '#34d399',
                   }}>
-                    {order.status}
+                    {t(order.status as any) || order.status}
                   </span>
                   
                   {(order.transaction_id || order.receipt_screenshot) && (
