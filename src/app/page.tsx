@@ -30,8 +30,7 @@ export default function Home() {
         <div className="hero-overlay"></div>
         <div className="container">
           <div className="hero-content animate-fade-in-up">
-            <h1 className="hero-title">
-              {t('hero_title')}
+            <h1 className="hero-title" dangerouslySetInnerHTML={{ __html: t('hero_title').replace('?', '? <br />') }}>
             </h1>
             <p className="hero-subtitle delay-100">
               {t('hero_subtitle')}
