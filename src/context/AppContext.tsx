@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { translations, TranslationKey } from '@/utils/translations';
@@ -97,13 +97,46 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const logout = () => {
+  const logout = useCallback(() => {
     setToken(null);
     setUser(null);
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     router.push('/');
-  };
+  }, [router]);
+
+  // Inactivity timeout: log out after 1 hour of no activity
+  useEffect(() => {
+    let inactivityTimer: NodeJS.Timeout;
+    const INACTIVITY_LIMIT = 60 * 60 * 1000; // 1 hour in ms
+
+    const resetTimer = () => {
+      clearTimeout(inactivityTimer);
+      // Only set timer if user is logged in
+      if (token) {
+        inactivityTimer = setTimeout(() => {
+          logout();
+        }, INACTIVITY_LIMIT);
+      }
+    };
+
+    // Listen for common activity events
+    const events = ['mousemove', 'keydown', 'scroll', 'click', 'touchstart'];
+    
+    // Initial setup
+    resetTimer();
+    
+    events.forEach(event => {
+      window.addEventListener(event, resetTimer);
+    });
+
+    return () => {
+      clearTimeout(inactivityTimer);
+      events.forEach(event => {
+        window.removeEventListener(event, resetTimer);
+      });
+    };
+  }, [token, logout]); // Re-run effect if token or logout function changes
 
   const addToCart = (newItem: CartItem) => {
     setCart(prev => {
