@@ -36,7 +36,7 @@ export default function Home() {
               {t('hero_subtitle')}
             </p>
             <div className="hero-actions delay-200">
-              <Link href="/restaurants">
+              <Link href={user ? "/restaurants" : "/login"}>
                 <button className="btn-primary">
                   {t('btn_order_now')}
                   <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
