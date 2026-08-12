@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { GoogleLogin } from '@react-oauth/google';
 import { useAppContext } from '@/context/AppContext';
 
@@ -11,6 +12,7 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const router = useRouter();
   const { login, t } = useAppContext();
 
   const handleGoogleSuccess = async (credentialResponse: any) => {
@@ -24,7 +26,9 @@ export default function LoginPage() {
       });
       const data = await res.json();
       
-      if (res.ok) {
+      if (res.status === 401 && data.error === 'requires_verification') {
+        router.push(`/verify-phone?userId=${data.userId}`);
+      } else if (res.ok) {
         login(data.token, data.user);
       } else {
         setError(data.error || 'Google login failed');
@@ -48,7 +52,9 @@ export default function LoginPage() {
       });
       const data = await res.json();
 
-      if (res.ok) {
+      if (res.status === 401 && data.error === 'requires_verification') {
+        router.push(`/verify-phone?userId=${data.userId}`);
+      } else if (res.ok) {
         login(data.token, data.user);
       } else {
         setError(data.error || 'Failed to login');
