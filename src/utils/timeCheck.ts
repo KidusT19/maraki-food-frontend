@@ -15,8 +15,11 @@ export function getEthiopianTimeInfo(): {
   
   let [hourStr, minuteStr] = eatTimeStr.split(':');
   if (hourStr === '24') hourStr = '0';
-  const eatHour = parseInt(hourStr, 10);
+  let eatHour = parseInt(hourStr, 10);
   const eatMinute = parseInt(minuteStr, 10);
+
+  // Apply +1 hour offset requested by user
+  eatHour = (eatHour + 1) % 24;
 
   // Time format logic (Decimal hour for easy comparison, e.g., 6.5 = 6:30 AM)
   const currentDecimalTime = eatHour + (eatMinute / 60);
