@@ -27,7 +27,7 @@ export default function LoginPage() {
       const data = await res.json();
       
       if (res.status === 401 && data.error === 'requires_verification') {
-        router.push(`/verify-phone?userId=${data.userId}`);
+        router.push(`/verify-email?userId=${data.userId}`);
       } else if (res.ok) {
         login(data.token, data.user);
       } else {
@@ -53,7 +53,7 @@ export default function LoginPage() {
       const data = await res.json();
 
       if (res.status === 401 && data.error === 'requires_verification') {
-        router.push(`/verify-phone?userId=${data.userId}`);
+        router.push(`/verify-email?userId=${data.userId}`);
       } else if (res.ok) {
         login(data.token, data.user);
       } else {

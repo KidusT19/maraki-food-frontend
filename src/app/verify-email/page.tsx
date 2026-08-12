@@ -4,10 +4,10 @@ import { useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAppContext } from '@/context/AppContext';
 
-function VerifyPhoneContent() {
-  const [phoneNumber, setPhoneNumber] = useState('');
+function VerifyEmailContent() {
+  const [email, setEmail] = useState('');
   const [otpCode, setOtpCode] = useState('');
-  const [step, setStep] = useState(1); // 1: Enter Phone, 2: Enter OTP
+  const [step, setStep] = useState(1); // 1: Enter Email, 2: Enter OTP
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -25,7 +25,7 @@ function VerifyPhoneContent() {
       const res = await fetch('https://maraki-food-backend.onrender.com/api/auth/send-otp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId, phone_number: phoneNumber })
+        body: JSON.stringify({ userId, email })
       });
       const data = await res.json();
 
@@ -71,9 +71,9 @@ function VerifyPhoneContent() {
     <main className="section bg-surface" style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
       <div className="card" style={{ maxWidth: '400px', width: '100%', padding: '2rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
         <div style={{ textAlign: 'center' }}>
-          <h1 className="section-title" style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>{t('verify_phone')}</h1>
+          <h1 className="section-title" style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>Verify Email</h1>
           <p style={{ color: '#64748b' }}>
-            {step === 1 ? "Please enter your phone number to receive a verification code." : "Enter the 6-digit code sent to your phone."}
+            {step === 1 ? "Please enter your email to receive a verification code." : "Enter the 6-digit code sent to your email."}
           </p>
         </div>
 
@@ -82,13 +82,13 @@ function VerifyPhoneContent() {
         {step === 1 ? (
           <form onSubmit={handleSendOtp} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             <div>
-              <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', fontWeight: 600 }}>{t('phone_number')}</label>
+              <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', fontWeight: 600 }}>{t('email')}</label>
               <input 
-                type="tel" 
-                value={phoneNumber}
-                onChange={(e) => setPhoneNumber(e.target.value)}
+                type="email" 
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 required
-                placeholder="+251..."
+                placeholder="hello@example.com"
                 style={{ width: '100%', padding: '0.75rem', borderRadius: '0.5rem', border: '2px solid #cbd5e1', backgroundColor: '#ffffff', color: '#0f172a', fontSize: '1rem' }}
               />
             </div>
@@ -128,7 +128,7 @@ function VerifyPhoneContent() {
               onClick={() => setStep(1)}
               style={{ background: 'none', border: 'none', color: '#f97316', cursor: 'pointer', marginTop: '0.5rem' }}
             >
-              Change Phone Number
+              Change Email
             </button>
           </form>
         )}
@@ -137,10 +137,10 @@ function VerifyPhoneContent() {
   );
 }
 
-export default function VerifyPhonePage() {
+export default function VerifyEmailPage() {
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <VerifyPhoneContent />
+      <VerifyEmailContent />
     </Suspense>
   );
 }

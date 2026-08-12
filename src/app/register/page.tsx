@@ -10,7 +10,6 @@ export default function RegisterPage() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -29,7 +28,7 @@ export default function RegisterPage() {
       const data = await res.json();
       
       if (res.status === 401 && data.error === 'requires_verification') {
-        router.push(`/verify-phone?userId=${data.userId}`);
+        router.push(`/verify-email?userId=${data.userId}`);
       } else if (res.ok) {
         login(data.token, data.user);
       } else {
@@ -50,12 +49,12 @@ export default function RegisterPage() {
       const res = await fetch('https://maraki-food-backend.onrender.com/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, password, phone_number: phoneNumber, role: 'customer' })
+        body: JSON.stringify({ name, email, password, role: 'customer' })
       });
       const data = await res.json();
 
       if (res.ok && data.requiresVerification) {
-        router.push(`/verify-phone?userId=${data.userId}`);
+        router.push(`/verify-email?userId=${data.userId}`);
       } else if (res.ok) {
         router.push('/login');
       } else {
@@ -99,18 +98,7 @@ export default function RegisterPage() {
               style={{ width: '100%', padding: '0.75rem', borderRadius: '0.5rem', border: '2px solid #cbd5e1', backgroundColor: '#ffffff', color: '#0f172a', fontSize: '1rem' }}
             />
           </div>
-          <div>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', fontWeight: 600 }}>{t('phone_number')}</label>
-            <input 
-              type="tel" 
-              value={phoneNumber}
-              onChange={(e) => setPhoneNumber(e.target.value)}
-              required
-              autoComplete="off"
-              placeholder="+251..."
-              style={{ width: '100%', padding: '0.75rem', borderRadius: '0.5rem', border: '2px solid #cbd5e1', backgroundColor: '#ffffff', color: '#0f172a', fontSize: '1rem' }}
-            />
-          </div>
+
           <div style={{ position: 'relative' }}>
             <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', fontWeight: 600 }}>{t('password')}</label>
             <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
