@@ -10,21 +10,13 @@ export default function CheckoutPage() {
   const { user, cart, cartTotal, clearCart, t } = useAppContext();
   const router = useRouter();
   
-  const [paymentMethod, setPaymentMethod] = useState<'telebirr' | 'cbe'>('telebirr');
+  const [paymentMethod, setPaymentMethod] = useState<'cash' | 'chapa'>('chapa');
   const [isProcessing, setIsProcessing] = useState(false);
   const [paymentSuccess, setPaymentSuccess] = useState(false);
 
-  // Form states
-  const [phone, setPhone] = useState('');
-  const [cbeAccount, setCbeAccount] = useState('');
-  
   // Delivery Info states
   const [deliveryAddress, setDeliveryAddress] = useState('');
   const [customerPhone, setCustomerPhone] = useState('');
-  
-  // Manual Verification states
-  const [transactionId, setTransactionId] = useState('');
-  const [receiptFile, setReceiptFile] = useState<File | null>(null);
 
   useEffect(() => {
     if (!user) {
@@ -46,27 +38,13 @@ export default function CheckoutPage() {
 
     setIsProcessing(true);
 
-    // 1. Simulate Payment Processing Delay (2.5 seconds)
-    await new Promise(resolve => setTimeout(resolve, 2500));
-
-    // 2. Submit the order to the backend
-    const restaurantId = cart[0]?.restaurant_id; // Assuming all items are from the same restaurant
+    const restaurantId = cart[0]?.restaurant_id;
 
     const formData = new FormData();
     formData.append('user_id', user?.id.toString() || '');
     formData.append('restaurant_id', restaurantId?.toString() || '0');
     formData.append('total_amount', cartTotal.toString());
-    
-    // Include the CBE account number in the transaction ID field if applicable
-    const finalTransactionId = paymentMethod === 'cbe' 
-      ? `CBE ${cbeAccount} ${transactionId ? '- ' + transactionId : ''}` 
-      : transactionId;
-      
-    formData.append('transaction_id', finalTransactionId);
-    
-    if (receiptFile) {
-      formData.append('receipt', receiptFile);
-    }
+    formData.append('payment_method', paymentMethod);
     
     formData.append('delivery_address', deliveryAddress);
     formData.append('customer_phone', customerPhone);
@@ -84,15 +62,19 @@ export default function CheckoutPage() {
       });
       
       if (res.ok) {
-        setPaymentSuccess(true);
+        const data = await res.json();
         clearCart();
         
-        // 3. Redirect to orders after showing success briefly
-        setTimeout(() => {
-          router.push('/orders');
-        }, 1500);
+        if (paymentMethod === 'chapa' && data.checkout_url) {
+          window.location.href = data.checkout_url;
+        } else {
+          setPaymentSuccess(true);
+          setTimeout(() => {
+            router.push('/orders');
+          }, 1500);
+        }
       } else {
-        alert("Failed to place order in database. Please try again.");
+        alert("Failed to place order. Please try again.");
         setIsProcessing(false);
       }
     } catch (err) {
@@ -181,70 +163,30 @@ export default function CheckoutPage() {
             <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '2rem' }}>
               <button 
                 type="button"
-                onClick={() => setPaymentMethod('telebirr')}
-                style={{ flex: 1, padding: '0.75rem', borderRadius: '0.5rem', border: '1px solid', borderColor: paymentMethod === 'telebirr' ? 'var(--primary)' : 'rgba(255,255,255,0.1)', background: paymentMethod === 'telebirr' ? 'rgba(234, 88, 12, 0.1)' : 'transparent', color: '#fff', cursor: 'pointer', fontWeight: 600, transition: 'all 0.2s' }}
+                onClick={() => setPaymentMethod('chapa')}
+                style={{ flex: 1, padding: '0.75rem', borderRadius: '0.5rem', border: '1px solid', borderColor: paymentMethod === 'chapa' ? '#a855f7' : 'rgba(255,255,255,0.1)', background: paymentMethod === 'chapa' ? 'rgba(168, 85, 247, 0.1)' : 'transparent', color: '#fff', cursor: 'pointer', fontWeight: 600, transition: 'all 0.2s' }}
               >
-                📱 Telebirr
+                💳 Pay with Chapa
               </button>
               <button 
                 type="button"
-                onClick={() => setPaymentMethod('cbe')}
-                style={{ flex: 1, padding: '0.75rem', borderRadius: '0.5rem', border: '1px solid', borderColor: paymentMethod === 'cbe' ? '#a855f7' : 'rgba(255,255,255,0.1)', background: paymentMethod === 'cbe' ? 'rgba(168, 85, 247, 0.1)' : 'transparent', color: '#fff', cursor: 'pointer', fontWeight: 600, transition: 'all 0.2s' }}
+                onClick={() => setPaymentMethod('cash')}
+                style={{ flex: 1, padding: '0.75rem', borderRadius: '0.5rem', border: '1px solid', borderColor: paymentMethod === 'cash' ? 'var(--primary)' : 'rgba(255,255,255,0.1)', background: paymentMethod === 'cash' ? 'rgba(234, 88, 12, 0.1)' : 'transparent', color: '#fff', cursor: 'pointer', fontWeight: 600, transition: 'all 0.2s' }}
               >
-                CBE Bank
+                💵 Cash on Delivery
               </button>
             </div>
 
             <form id="checkout-form" onSubmit={handlePayment} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              {paymentMethod === 'telebirr' && (
-                <>
-                  <p style={{ fontSize: '0.9rem', color: '#cbd5e1', marginBottom: '0.5rem' }}>{t('enter_telebirr')}</p>
-                  <label style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '0.9rem', color: '#cbd5e1' }}>
-                    {t('phone_number')}
-                    <input type="tel" placeholder="09XX XXX XXX" required value={phone} onChange={e => setPhone(e.target.value)} style={{ padding: '0.8rem', borderRadius: '0.5rem', border: '1px solid rgba(255,255,255,0.2)', background: 'rgba(0,0,0,0.2)', color: 'white' }} />
-                  </label>
-                  
-                  <div style={{ marginTop: '1rem', padding: '1rem', background: 'rgba(0,0,0,0.2)', borderRadius: '0.5rem', border: '1px dashed rgba(255,255,255,0.2)' }}>
-                    <h4 style={{ marginBottom: '1rem', color: '#fff', fontSize: '1rem' }}>{t('manual_verification')}</h4>
-                    <p style={{ fontSize: '0.85rem', color: '#cbd5e1', marginBottom: '1rem' }}>{t('transfer_to_telebirr')} <strong>0911XXXXXX</strong> {t('upload_receipt')}</p>
-                    
-                    <label style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '0.9rem', color: '#cbd5e1', marginBottom: '1rem' }}>
-                      {t('transaction_id')}
-                      <input type="text" placeholder="e.g. 7A8B9C" required value={transactionId} onChange={e => setTransactionId(e.target.value)} style={{ padding: '0.8rem', borderRadius: '0.5rem', border: '1px solid rgba(255,255,255,0.2)', background: 'rgba(0,0,0,0.2)', color: 'white' }} />
-                    </label>
-                    
-                    <label style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '0.9rem', color: '#cbd5e1' }}>
-                      {t('screenshot_receipt')}
-                      <input type="file" accept="image/*" required onChange={e => setReceiptFile(e.target.files?.[0] || null)} style={{ padding: '0.5rem 0', color: 'white' }} />
-                    </label>
-                  </div>
-                </>
+              {paymentMethod === 'chapa' && (
+                <div style={{ padding: '1rem', background: 'rgba(0,0,0,0.2)', borderRadius: '0.5rem', border: '1px dashed rgba(255,255,255,0.2)' }}>
+                  <p style={{ fontSize: '0.85rem', color: '#cbd5e1', marginBottom: '0.5rem' }}>You will be redirected to Chapa to complete your payment securely using Telebirr, CBE Birr, or a Bank Card.</p>
+                </div>
               )}
-
-
-
-              {paymentMethod === 'cbe' && (
-                <>
-                  <div style={{ marginTop: '0.5rem', padding: '1rem', background: 'rgba(0,0,0,0.2)', borderRadius: '0.5rem', border: '1px dashed rgba(255,255,255,0.2)' }}>
-                    <h4 style={{ marginBottom: '1rem', color: '#fff', fontSize: '1rem' }}>{t('cbe_transfer')}</h4>
-                    <p style={{ fontSize: '0.85rem', color: '#cbd5e1', marginBottom: '1rem' }}>{t('transfer_to_cbe')} <strong>1000987654321</strong> (Maraki Food Zones) {t('upload_receipt')}</p>
-                    
-                    <label style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '0.9rem', color: '#cbd5e1', marginBottom: '1rem' }}>
-                      {t('cbe_account')}
-                      <input type="text" pattern="^1000\d+$" placeholder="e.g. 1000123456789" required value={cbeAccount} onChange={e => setCbeAccount(e.target.value)} onInvalid={e => (e.target as HTMLInputElement).setCustomValidity('Account number must start with 1000')} onInput={e => (e.target as HTMLInputElement).setCustomValidity('')} style={{ padding: '0.8rem', borderRadius: '0.5rem', border: '1px solid rgba(255,255,255,0.2)', background: 'rgba(0,0,0,0.2)', color: 'white' }} />
-                    </label>
-                    
-                    <label style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '0.9rem', color: '#cbd5e1', marginBottom: '1rem' }}>
-                      {t('transaction_id')} (Optional)
-                      <input type="text" placeholder="e.g. FT23..." value={transactionId} onChange={e => setTransactionId(e.target.value)} style={{ padding: '0.8rem', borderRadius: '0.5rem', border: '1px solid rgba(255,255,255,0.2)', background: 'rgba(0,0,0,0.2)', color: 'white' }} />
-                    </label>
-                    
-                    <label style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '0.9rem', color: '#cbd5e1' }}>
-                      {t('screenshot_receipt')}
-                      <input type="file" accept="image/*" required onChange={e => setReceiptFile(e.target.files?.[0] || null)} style={{ padding: '0.5rem 0', color: 'white' }} />
-                    </label>
-                  </div>
-                </>
+              {paymentMethod === 'cash' && (
+                <div style={{ padding: '1rem', background: 'rgba(0,0,0,0.2)', borderRadius: '0.5rem', border: '1px dashed rgba(255,255,255,0.2)' }}>
+                  <p style={{ fontSize: '0.85rem', color: '#cbd5e1', marginBottom: '0.5rem' }}>You will pay the driver in cash when your food arrives.</p>
+                </div>
               )}
 
               <button 
@@ -256,9 +198,9 @@ export default function CheckoutPage() {
                   padding: '1rem', 
                   fontSize: '1.1rem',
                   opacity: isProcessing ? 0.7 : 1,
-                  background: paymentMethod === 'telebirr' ? '#ea580c' : '#a855f7'
+                  background: paymentMethod === 'cash' ? '#ea580c' : '#a855f7'
                 }}>
-                {isProcessing ? '...' : t('pay_btn').replace('{total}', cartTotal.toFixed(2))}
+                {isProcessing ? 'Processing...' : paymentMethod === 'chapa' ? 'Pay with Chapa' : t('pay_btn').replace('{total}', cartTotal.toFixed(2))}
               </button>
             </form>
           </div>
