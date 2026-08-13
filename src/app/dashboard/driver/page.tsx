@@ -222,29 +222,110 @@ export default function DriverDashboard() {
               </div>
             </div>
 
-            {/* Ledger */}
-            <div style={{ background: 'rgba(255,255,255,0.04)', backdropFilter: 'blur(12px)', padding: '1.5rem', borderRadius: '1rem', border: '1px solid rgba(255,255,255,0.1)' }}>
-              <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#fff', marginBottom: '1.5rem', marginTop: 0 }}>Recent Deliveries</h3>
-              {(!earningsData?.recentDeliveries || earningsData.recentDeliveries.length === 0) ? (
-                <div style={{ textAlign: 'center', padding: '3rem 0', color: '#94a3b8' }}>
-                  You haven't completed any deliveries yet.
-                </div>
-              ) : (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                  {earningsData.recentDeliveries.map((delivery: any) => (
-                    <div key={delivery.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem', background: 'rgba(0,0,0,0.2)', borderRadius: '0.75rem', border: '1px solid rgba(255,255,255,0.05)' }}>
-                      <div>
-                        <p style={{ color: '#fff', fontWeight: 500, margin: '0 0 0.25rem 0' }}>Order #{delivery.id}</p>
-                        <p style={{ fontSize: '0.875rem', color: '#94a3b8', margin: 0 }}>{new Date(delivery.created_at).toLocaleString()}</p>
-                      </div>
-                      <div style={{ textAlign: 'right' }}>
-                        <p style={{ fontSize: '1.125rem', fontWeight: 'bold', color: '#4ade80', margin: '0 0 0.25rem 0' }}>+50.00 ETB</p>
-                        <p style={{ fontSize: '0.875rem', color: '#64748b', margin: 0 }}>Delivery Fee</p>
-                      </div>
+            {/* Analytics Section */}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '2rem' }}>
+              
+              {/* 7-Day Chart */}
+              <div style={{ background: 'rgba(255,255,255,0.04)', backdropFilter: 'blur(12px)', padding: '1.5rem', borderRadius: '1rem', border: '1px solid rgba(255,255,255,0.1)' }}>
+                <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#fff', marginBottom: '1.5rem', marginTop: 0 }}>7-Day Earnings Trend</h3>
+                {earningsData?.chartData ? (
+                  <div style={{ display: 'flex', alignItems: 'flex-end', gap: '0.5rem', height: '200px', paddingBottom: '1rem', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+                    {(() => {
+                      const maxEarning = Math.max(...earningsData.chartData.map((d: any) => d.earnings), 100);
+                      return earningsData.chartData.map((data: any, idx: number) => {
+                        const heightPct = (data.earnings / maxEarning) * 100;
+                        return (
+                          <div key={idx} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
+                            <div style={{ color: '#4ade80', fontSize: '0.75rem', fontWeight: 'bold', opacity: data.earnings > 0 ? 1 : 0 }}>
+                              {data.earnings}
+                            </div>
+                            <div style={{ 
+                              width: '100%', 
+                              maxWidth: '40px',
+                              height: `${Math.max(heightPct, 1)}%`, 
+                              background: 'linear-gradient(to top, #10b981, #4ade80)', 
+                              borderRadius: '4px 4px 0 0',
+                              transition: 'height 1s ease'
+                            }}></div>
+                            <div style={{ color: '#94a3b8', fontSize: '0.75rem', marginTop: '0.5rem' }}>
+                              {data.day}
+                            </div>
+                          </div>
+                        );
+                      });
+                    })()}
+                  </div>
+                ) : (
+                  <div style={{ textAlign: 'center', padding: '2rem 0', color: '#94a3b8' }}>Loading chart...</div>
+                )}
+              </div>
+
+              {/* Tables Container */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
+                
+                {/* Today Analysis */}
+                <div style={{ background: 'rgba(255,255,255,0.04)', backdropFilter: 'blur(12px)', padding: '1.5rem', borderRadius: '1rem', border: '1px solid rgba(255,255,255,0.1)' }}>
+                  <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#fff', marginBottom: '1.5rem', marginTop: 0 }}>Today Analysis</h3>
+                  {(!earningsData?.todayAnalysis || earningsData.todayAnalysis.length === 0) ? (
+                    <div style={{ textAlign: 'center', padding: '2rem 0', color: '#94a3b8' }}>No deliveries today.</div>
+                  ) : (
+                    <div style={{ overflowX: 'auto' }}>
+                      <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.9rem' }}>
+                        <thead>
+                          <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.1)', color: '#94a3b8' }}>
+                            <th style={{ padding: '0.75rem 0.5rem' }}>Restaurant</th>
+                            <th style={{ padding: '0.75rem 0.5rem' }}>Today's Earning</th>
+                            <th style={{ padding: '0.75rem 0.5rem' }}>Order Amount</th>
+                            <th style={{ padding: '0.75rem 0.5rem' }}>Day</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {earningsData.todayAnalysis.map((item: any, idx: number) => (
+                            <tr key={idx} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)', color: '#f8fafc' }}>
+                              <td style={{ padding: '1rem 0.5rem' }}>{item.restaurant}</td>
+                              <td style={{ padding: '1rem 0.5rem', color: '#4ade80', fontWeight: 'bold' }}>{item.earnings} ETB</td>
+                              <td style={{ padding: '1rem 0.5rem' }}>{item.orderAmount}</td>
+                              <td style={{ padding: '1rem 0.5rem', color: '#94a3b8' }}>{item.day}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
                     </div>
-                  ))}
+                  )}
                 </div>
-              )}
+
+                {/* Weekly Analysis */}
+                <div style={{ background: 'rgba(255,255,255,0.04)', backdropFilter: 'blur(12px)', padding: '1.5rem', borderRadius: '1rem', border: '1px solid rgba(255,255,255,0.1)' }}>
+                  <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#fff', marginBottom: '1.5rem', marginTop: 0 }}>Weekly Analysis</h3>
+                  {(!earningsData?.weeklyAnalysis || earningsData.weeklyAnalysis.length === 0) ? (
+                    <div style={{ textAlign: 'center', padding: '2rem 0', color: '#94a3b8' }}>No deliveries this week.</div>
+                  ) : (
+                    <div style={{ overflowX: 'auto' }}>
+                      <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.9rem' }}>
+                        <thead>
+                          <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.1)', color: '#94a3b8' }}>
+                            <th style={{ padding: '0.75rem 0.5rem' }}>Restaurant</th>
+                            <th style={{ padding: '0.75rem 0.5rem' }}>Earned</th>
+                            <th style={{ padding: '0.75rem 0.5rem' }}>Order Amount</th>
+                            <th style={{ padding: '0.75rem 0.5rem' }}>Days</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {earningsData.weeklyAnalysis.map((item: any, idx: number) => (
+                            <tr key={idx} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)', color: '#f8fafc' }}>
+                              <td style={{ padding: '1rem 0.5rem' }}>{item.restaurant}</td>
+                              <td style={{ padding: '1rem 0.5rem', color: '#34d399', fontWeight: 'bold' }}>{item.earnings} ETB</td>
+                              <td style={{ padding: '1rem 0.5rem' }}>{item.orderAmount}</td>
+                              <td style={{ padding: '1rem 0.5rem', color: '#94a3b8' }}>{item.days}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
+                </div>
+
+              </div>
             </div>
           </div>
         ) : (
