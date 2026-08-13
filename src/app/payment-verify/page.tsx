@@ -21,7 +21,7 @@ function VerifyPaymentContent() {
 
     const verify = async () => {
       try {
-        const res = await fetch(\`https://maraki-food-backend.onrender.com/api/orders/verify-payment/\${tx_ref}\`);
+        const res = await fetch(`https://maraki-food-backend.onrender.com/api/orders/verify-payment/${tx_ref}`);
         const data = await res.json();
 
         if (res.ok && data.success) {
@@ -84,13 +84,13 @@ export default function PaymentVerifyPage() {
         <VerifyPaymentContent />
       </Suspense>
       
-      <style dangerouslySetInnerHTML={{__html: \`
+      <style dangerouslySetInnerHTML={{__html: `
         @keyframes spin { 100% { transform: rotate(360deg); } }
         @keyframes fade-in-up {
           from { opacity: 0; transform: translateY(20px); }
           to { opacity: 1; transform: translateY(0); }
         }
-      \`}} />
+      `}} />
     </main>
   );
 }
