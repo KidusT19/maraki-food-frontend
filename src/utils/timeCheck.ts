@@ -24,9 +24,6 @@ export function getEthiopianTimeInfo(): {
   // Time format logic (Decimal hour for easy comparison, e.g., 6.5 = 6:30 AM)
   const currentDecimalTime = eatHour + (eatMinute / 60);
 
-  // TEMPORARY OVERRIDE for testing
-  return { isActive: true, activeMeal: 'Test', message: null, currentEATHour: eatHour, currentEATMinute: eatMinute };
-
   // Breakfast: 6:00 AM (6) to 9:00 AM (9)
   if (currentDecimalTime >= 6 && currentDecimalTime <= 9) {
     return { isActive: true, activeMeal: 'Breakfast', message: null, currentEATHour: eatHour, currentEATMinute: eatMinute };
